@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
@@ -28,6 +29,7 @@ const slideVariants = {
 };
 
 export default function RestaurantCard({ restaurant }: { restaurant: Restaurant }) {
+  const router = useRouter();
   const discountPromo = restaurant.promos.find((p) => p.type === 'percentage' && p.value > 0);
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -35,6 +37,7 @@ export default function RestaurantCard({ restaurant }: { restaurant: Restaurant 
   const [menuSlides, setMenuSlides] = useState<Slide[]>([]);
   const [fetched, setFetched] = useState(false);
   const fetchingRef = useRef(false);
+  const dragDistance = useRef(0);
 
   // Build slides: hero first, then menu items (loaded on first swipe)
   const heroSlide: Slide = { type: 'hero', image: restaurant.image };
@@ -117,8 +120,15 @@ export default function RestaurantCard({ restaurant }: { restaurant: Restaurant 
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.12}
+            onDrag={(_, info) => { dragDistance.current = Math.abs(info.offset.x); }}
             onDragEnd={handleDragEnd}
-            className="absolute inset-0 cursor-grab active:cursor-grabbing"
+            onClick={() => {
+              if (dragDistance.current < 5) {
+                router.push(`/restaurant/${restaurant.id}`);
+              }
+              dragDistance.current = 0;
+            }}
+            className="absolute inset-0 cursor-pointer"
           >
             {currentSlide.image ? (
               <Image

@@ -13,15 +13,17 @@ const MapPicker = dynamic(() => import('@/components/ui/MapPicker'), { ssr: fals
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const { user, setName, setAddress } = useUserStore();
+  const { user, setName, setAddress, addSavedAddress } = useUserStore();
   const [step, setStep] = useState<'name' | 'location'>(user?.name ? 'location' : 'name');
   const [nameInput, setNameInput] = useState(user?.name || '');
+  const [addressTitle, setAddressTitle] = useState('');
   const [addressInput, setAddressInput] = useState('');
   const [addressType, setAddressType] = useState<'home' | 'apartment' | 'office' | 'other'>('home');
   const [building, setBuilding] = useState('');
   const [floor, setFloor] = useState('');
   const [unit, setUnit] = useState('');
   const [mapLocation, setMapLocation] = useState<{ lat: number; lng: number; formatted: string } | null>(null);
+  const [mapAccuracy, setMapAccuracy] = useState(15);
 
   const handleNameSubmit = () => {
     if (!nameInput.trim()) return;
@@ -32,7 +34,9 @@ export default function OnboardingPage() {
   const handleConfirmAddress = () => {
     const formatted = mapLocation?.formatted || addressInput || `${building}, Floor ${floor || '1'}`;
     if (!formatted.trim() && !building.trim() && !mapLocation) return;
-    setAddress({
+    if (mapLocation && mapAccuracy < 80) return;
+
+    const addressData = {
       formatted,
       lat: mapLocation?.lat || 0,
       lng: mapLocation?.lng || 0,
@@ -40,11 +44,24 @@ export default function OnboardingPage() {
       floor,
       unit,
       addressType,
+    };
+
+    // Set as active delivery address
+    setAddress(addressData);
+
+    // Also save to saved addresses list
+    const label = addressTitle.trim() || (addressType === 'home' ? 'Home' : addressType === 'office' ? 'Office' : addressType === 'apartment' ? 'Apartment' : 'Address');
+    addSavedAddress({
+      id: Date.now().toString(),
+      label,
+      ...addressData,
+      isDefault: true,
     });
+
     router.push('/');
   };
 
-  const hasValidAddress = !!(mapLocation || addressInput.trim() || building.trim());
+  const hasValidAddress = !!(mapLocation && mapAccuracy >= 80);
 
   return (
     <div className="relative min-h-screen flex flex-col items-center px-6 pt-16 pb-10 overflow-hidden">
@@ -114,6 +131,24 @@ export default function OnboardingPage() {
                     setMapLocation(loc);
                     setAddressInput(loc.formatted);
                   }}
+                  onAccuracyChange={(percent) => setMapAccuracy(percent)}
+                />
+
+                {/* Accuracy warning */}
+                {mapLocation && mapAccuracy < 80 && (
+                  <div className="flex items-center gap-2 bg-error/10 rounded-xl px-3 py-2">
+                    <span className="text-sm">⚠️</span>
+                    <p className="text-xs font-medium text-error">
+                      Zoom in more for at least 80% accuracy to confirm your address
+                    </p>
+                  </div>
+                )}
+
+                {/* Address Title */}
+                <Input
+                  placeholder="Address title (e.g. My Home, Work)"
+                  value={addressTitle}
+                  onChange={(e) => setAddressTitle(e.target.value)}
                 />
 
                 {/* Address Type Selector */}

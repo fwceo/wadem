@@ -17,6 +17,7 @@ interface MapPickerProps {
     lng: number;
     formatted: string;
   }) => void;
+  onAccuracyChange?: (percent: number) => void;
   initialCenter?: { lat: number; lng: number };
 }
 
@@ -28,7 +29,7 @@ function getAccuracy(zoom: number): { percent: number; label: string; color: str
   return { percent: 15, label: 'Very Low', color: '#EF4444', hint: 'Zoom in much closer to place pin accurately.' };
 }
 
-export default function MapPicker({ onLocationSelect, initialCenter }: MapPickerProps) {
+export default function MapPicker({ onLocationSelect, onAccuracyChange, initialCenter }: MapPickerProps) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: MAPS_API_KEY,
   });
@@ -82,9 +83,11 @@ export default function MapPicker({ onLocationSelect, initialCenter }: MapPicker
 
   const handleZoomChanged = useCallback(() => {
     if (mapRef.current) {
-      setZoom(mapRef.current.getZoom() || 14);
+      const newZoom = mapRef.current.getZoom() || 14;
+      setZoom(newZoom);
+      onAccuracyChange?.(getAccuracy(newZoom).percent);
     }
-  }, []);
+  }, [onAccuracyChange]);
 
   const handleLocateMe = useCallback(() => {
     if (!navigator.geolocation) return;

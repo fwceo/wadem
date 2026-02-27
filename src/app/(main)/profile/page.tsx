@@ -56,6 +56,7 @@ export default function ProfilePage() {
   const [newAddrUnit, setNewAddrUnit] = useState('');
   const [newAddrMap, setNewAddrMap] = useState<{ lat: number; lng: number; formatted: string } | null>(null);
   const [newAddrDefault, setNewAddrDefault] = useState(false);
+  const [newAddrAccuracy, setNewAddrAccuracy] = useState(15);
 
   // Preferences sheet
   const [showPrefsSheet, setShowPrefsSheet] = useState(false);
@@ -90,11 +91,12 @@ export default function ProfilePage() {
     setNewAddrUnit('');
     setNewAddrMap(null);
     setNewAddrDefault(false);
+    setNewAddrAccuracy(15);
   };
 
   const handleAddAddress = () => {
     const formatted = newAddrMap?.formatted || `${newAddrBuilding}, Floor ${newAddrFloor || '1'}`;
-    if (!formatted.trim() && !newAddrBuilding.trim() && !newAddrMap) return;
+    if (!newAddrMap || newAddrAccuracy < 80) return;
 
     const addr: SavedAddress = {
       id: Date.now().toString(),
@@ -420,25 +422,41 @@ export default function ProfilePage() {
       </BottomSheet>
 
       {/* ─── Add Address Bottom Sheet ─── */}
-      <BottomSheet isOpen={showAddAddress} onClose={() => setShowAddAddress(false)} title="Add Address">
+      <BottomSheet isOpen={showAddAddress} onClose={() => setShowAddAddress(false)} title="Add Address" height="92vh">
         <div className="px-4 py-4 space-y-3">
-          {/* Map instruction — matches onboarding flow */}
+          {/* Map instruction */}
           <div className="flex items-center gap-2 bg-primary/10 rounded-xl px-3 py-2">
             <span className="text-lg">📍</span>
             <p className="text-sm font-medium text-secondary">
               {newAddrMap ? 'Pin set! You can tap again to move it.' : 'Tap the map to drop your delivery pin'}
             </p>
           </div>
-          <MapPicker
-            onLocationSelect={(loc) => {
-              setNewAddrMap(loc);
-            }}
-          />
+
+          {/* Map — taller for better usability */}
+          <div className="rounded-xl overflow-hidden" style={{ height: '220px' }}>
+            <MapPicker
+              onLocationSelect={(loc) => setNewAddrMap(loc)}
+              onAccuracyChange={(percent) => setNewAddrAccuracy(percent)}
+            />
+          </div>
+
+          {/* Accuracy warning */}
+          {newAddrMap && newAddrAccuracy < 80 && (
+            <div className="flex items-center gap-2 bg-error/10 rounded-xl px-3 py-2">
+              <span className="text-sm">⚠️</span>
+              <p className="text-xs font-medium text-error">
+                Zoom in more for at least 80% accuracy to save your address
+              </p>
+            </div>
+          )}
+
+          {/* Address Title */}
           <Input
             value={newAddrLabel}
             onChange={(e) => setNewAddrLabel(e.target.value)}
-            placeholder="Label (e.g. Home, Work)"
+            placeholder="Address title (e.g. My Home, Work)"
           />
+
           {/* Address Type Selector */}
           <div className="grid grid-cols-4 gap-2">
             {(['home', 'apartment', 'office', 'other'] as const).map((type) => (
@@ -459,11 +477,13 @@ export default function ProfilePage() {
               </button>
             ))}
           </div>
+
           <Input value={newAddrBuilding} onChange={(e) => setNewAddrBuilding(e.target.value)} placeholder="Building / Complex" />
           <div className="flex gap-3">
             <Input value={newAddrFloor} onChange={(e) => setNewAddrFloor(e.target.value)} placeholder="Floor" />
             <Input value={newAddrUnit} onChange={(e) => setNewAddrUnit(e.target.value)} placeholder="Unit / Door #" />
           </div>
+
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
@@ -473,13 +493,14 @@ export default function ProfilePage() {
             />
             <span className="text-sm text-text-primary">Set as default address</span>
           </label>
+
           <Button
             fullWidth
             size="lg"
             onClick={handleAddAddress}
-            disabled={!newAddrMap && !newAddrBuilding.trim()}
+            disabled={!newAddrMap || newAddrAccuracy < 80}
           >
-            Save Address
+            {newAddrMap && newAddrAccuracy < 80 ? 'Zoom in for better accuracy' : 'Save Address'}
           </Button>
         </div>
       </BottomSheet>

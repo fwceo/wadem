@@ -104,7 +104,7 @@ export default function RestaurantCard({ restaurant }: { restaurant: Restaurant 
   return (
     <div className="bg-white rounded-2xl overflow-hidden transition-shadow hover:shadow-md">
       {/* Image area — swipeable */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-gray-100">
+      <div className="group/card relative aspect-[16/10] w-full overflow-hidden bg-gray-100">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={activeIndex}
@@ -158,6 +158,41 @@ export default function RestaurantCard({ restaurant }: { restaurant: Restaurant 
             )}
           </motion.div>
         </AnimatePresence>
+
+        {/* Desktop arrow buttons — visible on hover */}
+        <button
+          onClick={async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!fetched) await fetchMenuItems();
+            if (activeIndex > 0) goToPrev();
+          }}
+          className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 bg-white/90 rounded-full items-center justify-center shadow opacity-0 group-hover/card:opacity-100 transition-opacity"
+          aria-label="Previous slide"
+        >
+          <svg className="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          onClick={async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!fetched) {
+              await fetchMenuItems();
+              setDirection(1);
+              setActiveIndex(1);
+              return;
+            }
+            goToNext();
+          }}
+          className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-8 h-8 bg-white/90 rounded-full items-center justify-center shadow opacity-0 group-hover/card:opacity-100 transition-opacity"
+          aria-label="Next slide"
+        >
+          <svg className="w-4 h-4 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
 
         {/* Overlay badges */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">

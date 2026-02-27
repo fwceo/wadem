@@ -78,13 +78,23 @@ export default function RestaurantCard({ restaurant }: { restaurant: Restaurant 
   }, [count]);
 
   const handleDragEnd = useCallback(async (_: unknown, info: PanInfo) => {
-    // On first swipe, fetch menu items
+    const swipedLeft = info.offset.x < -50;
+    const swipedRight = info.offset.x > 50;
+    if (!swipedLeft && !swipedRight) return;
+
+    // On first swipe, fetch then immediately navigate
     if (!fetched) {
       await fetchMenuItems();
+      if (swipedLeft) {
+        setDirection(1);
+        setActiveIndex(1);
+      }
+      return;
     }
-    if (info.offset.x > 50) {
+
+    if (swipedRight) {
       goToPrev();
-    } else if (info.offset.x < -50) {
+    } else {
       goToNext();
     }
   }, [fetched, fetchMenuItems, goToNext, goToPrev]);

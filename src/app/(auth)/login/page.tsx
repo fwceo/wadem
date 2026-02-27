@@ -110,14 +110,9 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
-      {/* Background food GIF loop */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/onboarding-bg.jpg"
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover z-0"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/50 via-primary/75 to-primary/90 backdrop-blur-sm z-0" />
+      {/* Background — warm gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-dark to-primary z-0" />
+      <div className="absolute inset-0 z-0 opacity-[0.07]" style={{ backgroundImage: 'radial-gradient(circle at 25% 25%, #111 1px, transparent 1px), radial-gradient(circle at 75% 75%, #111 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
 
       <div className="relative z-10 mb-10 text-center login-entrance">
         <div className="w-20 h-20 rounded-2xl overflow-hidden mx-auto mb-4 shadow-md ring-4 ring-white/20">

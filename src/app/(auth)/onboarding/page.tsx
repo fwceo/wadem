@@ -48,15 +48,9 @@ export default function OnboardingPage() {
 
   return (
     <div className="relative min-h-screen flex flex-col items-center px-6 pt-16 pb-10 overflow-hidden">
-      {/* Background GIF — fully visible */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/Yellow_Anime_Superman_Video_Ready.gif"
-        alt=""
-        className="absolute inset-0 w-full h-full object-cover z-0"
-      />
-      {/* Subtle dark overlay for contrast */}
-      <div className="absolute inset-0 bg-black/30 z-0" />
+      {/* Background — warm gradient with subtle pattern */}
+      <div className="absolute inset-0 bg-gradient-to-b from-primary via-primary to-primary-dark z-0" />
+      <div className="absolute inset-0 z-0 opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(circle at 30% 20%, #111 1px, transparent 1px), radial-gradient(circle at 70% 80%, #111 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
       <AnimatePresence mode="wait">
         {step === 'name' && (
           <motion.div

@@ -79,3 +79,22 @@ input[type='number']::-webkit-outer-spin-button {
 /* Native-like touch feedback */
 .touch-bounce { transition: transform 0.1s ease; }
 .touch-bounce:active { transform: scale(0.97); }
+
+/* Login page entrance — CSS-first, no FOUC */
+@keyframes login-entrance {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.login-entrance {
+  animation: login-entrance 0.4s ease-out both;
+}
+
+/* Reduced motion: skip animations */
+@media (prefers-reduced-motion: reduce) {
+  .login-entrance,
+  .animate-fade-in-up {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

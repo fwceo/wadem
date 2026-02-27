@@ -112,30 +112,29 @@ export default function LoginPage() {
       {/* Background food GIF loop */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/onboarding-bg.gif"
+        src="/onboarding-bg.jpg"
         alt=""
         className="absolute inset-0 w-full h-full object-cover z-0"
       />
-      <div className="absolute inset-0 bg-primary/80 backdrop-blur-sm z-0" />
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/50 via-primary/75 to-primary/90 backdrop-blur-sm z-0" />
 
       <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
+        initial={{ scale: 1, opacity: 1 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-        className="relative z-10 mb-10 text-center"
+        className="relative z-10 mb-10 text-center login-entrance"
       >
-        <div className="w-20 h-20 rounded-2xl overflow-hidden mx-auto mb-4 shadow-lg">
+        <div className="w-20 h-20 rounded-2xl overflow-hidden mx-auto mb-4 shadow-md ring-4 ring-white/20">
           <Image src="/wadem-logo.png" alt="Wadem" width={80} height={80} className="w-full h-full object-contain" />
         </div>
-        <h1 className="text-4xl font-extrabold text-secondary mb-1">Wadem</h1>
-        <p className="text-secondary/60 text-[15px]">Order fast. Eat well. Get back to work.</p>
+        <h1 className="text-4xl font-extrabold text-secondary tracking-tight mb-1">Wadem</h1>
+        <p className="text-secondary/60 text-sm">Order fast. Eat well. Get back to work.</p>
       </motion.div>
 
       <motion.div
-        initial={{ y: 40, opacity: 0 }}
+        initial={{ y: 0, opacity: 1 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.4 }}
-        className="relative z-10 w-full max-w-sm space-y-4"
+        className="relative z-10 w-full max-w-sm space-y-4 login-entrance"
+        style={{ animationDelay: '0.1s' }}
       >
         <form onSubmit={handleEmailSubmit} className="space-y-3">
           {isSignUp && (
@@ -144,7 +143,7 @@ export default function LoginPage() {
               placeholder="Your name"
               value={nameInput}
               onChange={(e) => setNameInput(e.target.value)}
-              className="bg-white border-0 text-base py-3.5"
+              className="bg-white shadow-sm text-base py-3.5"
             />
           )}
           <Input
@@ -152,7 +151,7 @@ export default function LoginPage() {
             placeholder="Email address"
             value={emailInput}
             onChange={(e) => setEmailInput(e.target.value)}
-            className="bg-white border-0 text-base py-3.5"
+            className="bg-white shadow-sm text-base py-3.5"
             autoFocus
           />
           <Input
@@ -161,7 +160,7 @@ export default function LoginPage() {
             value={passwordInput}
             onChange={(e) => setPasswordInput(e.target.value)}
             error={error}
-            className="bg-white border-0 text-base py-3.5"
+            className="bg-white shadow-sm text-base py-3.5"
           />
           <Button
             type="submit"
@@ -175,15 +174,15 @@ export default function LoginPage() {
 
         <button
           onClick={() => { setIsSignUp(!isSignUp); setError(''); }}
-          className="w-full text-center text-sm text-secondary/70 hover:text-secondary transition-colors"
+          className="w-full text-center text-sm text-secondary/80 hover:text-secondary py-2 transition-colors"
         >
-          {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+          {isSignUp ? <>Already have an account? <span className="font-semibold underline">Sign in</span></> : <>Don&apos;t have an account? <span className="font-semibold underline">Sign up</span></>}
         </button>
 
         <div className="flex items-center gap-3">
-          <div className="flex-1 h-px bg-secondary/20" />
-          <span className="text-secondary/40 text-sm">or</span>
-          <div className="flex-1 h-px bg-secondary/20" />
+          <div className="flex-1 h-px bg-secondary/25" />
+          <span className="text-secondary/50 text-xs font-medium uppercase tracking-widest">or</span>
+          <div className="flex-1 h-px bg-secondary/25" />
         </div>
 
         <Button
@@ -192,7 +191,7 @@ export default function LoginPage() {
           size="lg"
           onClick={handleGoogleSignIn}
           loading={isLoading}
-          className="bg-white border-0 text-secondary font-bold"
+          className="bg-white shadow-sm hover:shadow-md text-secondary font-semibold"
         >
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
             <path

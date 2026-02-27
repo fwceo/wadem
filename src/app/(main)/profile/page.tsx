@@ -432,13 +432,11 @@ export default function ProfilePage() {
             </p>
           </div>
 
-          {/* Map — taller for better usability */}
-          <div className="rounded-xl overflow-hidden" style={{ height: '220px' }}>
-            <MapPicker
-              onLocationSelect={(loc) => setNewAddrMap(loc)}
-              onAccuracyChange={(percent) => setNewAddrAccuracy(percent)}
-            />
-          </div>
+          {/* Map */}
+          <MapPicker
+            onLocationSelect={(loc) => setNewAddrMap(loc)}
+            onAccuracyChange={(percent) => setNewAddrAccuracy(percent)}
+          />
 
           {/* Accuracy warning */}
           {newAddrMap && newAddrAccuracy < 80 && (

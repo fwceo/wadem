@@ -14,7 +14,6 @@ import SmartComboDice from '@/components/home/SmartComboDice';
 import { Restaurant, MenuCategory, MenuItem, Customization, CustomizationOption } from '@/types';
 import { SelectedCustomization } from '@/types/order';
 import { formatDeliveryTime, formatPrice } from '@/lib/utils';
-import ItemSlider from '@/components/ui/ItemSlider';
 
 export default function RestaurantPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -318,18 +317,6 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
             </span>
           </div>
         </div>
-
-        {/* Item Slider — featured items carousel */}
-        {hasMenu && (
-          <ItemSlider
-            items={categories.flatMap((c) => c.items)}
-            onItemTap={(item) => {
-              setSelectedItem(item);
-              setQuantity(1);
-              setSelectedCustomizations({});
-            }}
-          />
-        )}
 
         {/* Category Tabs — above everything */}
         {hasMenu && (

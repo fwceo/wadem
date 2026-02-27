@@ -151,6 +151,9 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
     for (const c of selectedItem.customizations) {
       if (c.required && (!selectedCustomizations[c.id] || selectedCustomizations[c.id].length === 0)) {
         addToast({ type: 'error', message: `Please select ${c.name}` });
+        // Scroll to the unfilled required addon
+        const el = document.getElementById(`cust-${c.id}`);
+        el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;
       }
     }
@@ -509,7 +512,7 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
 
               {/* Customizations */}
               {selectedItem.customizations.map((cust) => (
-                <div key={cust.id}>
+                <div key={cust.id} id={`cust-${cust.id}`}>
                   <div className="flex items-center gap-2 mb-2">
                     <h4 className="text-[15px] font-semibold text-secondary">{cust.name}</h4>
                     {cust.required && (

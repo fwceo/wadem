@@ -80,8 +80,8 @@ export default function TypewriterGreeting() {
   if (!fullText && !displayText) return null;
 
   return (
-    <div className="animate-fade-in-up">
-      <p className="text-[15px] md:text-base font-medium text-secondary/80 leading-relaxed">
+    <div className="animate-fade-in-up h-6 overflow-hidden">
+      <p className="text-[15px] md:text-base font-medium text-secondary/80 leading-6 truncate">
         {displayText}
         {isTyping && (
           <span className="inline-block w-[2px] h-4 bg-secondary/60 ml-0.5 align-middle animate-pulse" />

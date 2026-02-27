@@ -11,7 +11,7 @@ import { useCartStore } from '@/stores/cart';
 import { useOrdersStore } from '@/stores/orders';
 import { useUserStore } from '@/stores/user';
 import { formatPrice, generateOrderId } from '@/lib/utils';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Order } from '@/types/order';
 
@@ -42,6 +42,8 @@ export default function CartSheet() {
 
   const [promoInput, setPromoInput] = useState('');
   const [showCheckout, setShowCheckout] = useState(false);
+  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
+  const checkoutScrollRef = useRef<HTMLDivElement>(null);
   const [deliveryNotes, setDeliveryNotes] = useState('');
   const [isPlacing, setIsPlacing] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
@@ -509,9 +511,18 @@ export default function CartSheet() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     whileTap={{ scale: 0.98 }}
+                    ref={checkoutScrollRef}
                   >
-                    <Button fullWidth size="lg" onClick={handlePlaceOrder} loading={isPlacing} disabled={!hasAddress}>
-                      {!hasAddress ? 'Add address to order' : isPlacing ? 'Placing Order...' : `Place Order — ${formatPrice(total)}`}
+                    <Button fullWidth size="lg" onClick={() => {
+                      if (!hasAddress) return;
+                      if (!hasScrolledToBottom) {
+                        checkoutScrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        setHasScrolledToBottom(true);
+                        return;
+                      }
+                      handlePlaceOrder();
+                    }} loading={isPlacing} disabled={!hasAddress}>
+                      {!hasAddress ? 'Add address to order' : isPlacing ? 'Placing Order...' : !hasScrolledToBottom ? `Review & Place Order — ${formatPrice(total)}` : `Place Order — ${formatPrice(total)}`}
                     </Button>
                   </motion.div>
                 )}

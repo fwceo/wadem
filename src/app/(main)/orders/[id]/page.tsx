@@ -8,13 +8,21 @@ import { useOrdersStore } from '@/stores/orders';
 import { OrderStatus } from '@/types/order';
 import { formatPrice } from '@/lib/utils';
 
-const STEPS: { status: OrderStatus; label: string; icon: string; desc: string }[] = [
-  { status: 'New', label: 'Order Placed', icon: '📝', desc: 'Your order has been received' },
-  { status: 'Accepted', label: 'Accepted', icon: '✅', desc: 'Restaurant is confirming your order' },
-  { status: 'Preparing', label: 'Preparing', icon: '👨‍🍳', desc: 'Your food is being prepared' },
-  { status: 'On The Way', label: 'On The Way', icon: '🛵', desc: 'Your rider is heading to you' },
-  { status: 'Delivered', label: 'Delivered', icon: '🎉', desc: 'Enjoy your meal!' },
+const STEPS: { status: OrderStatus; label: string; pastLabel: string; icon: string; desc: string; pastDesc: string }[] = [
+  { status: 'New', label: 'Order Placed', pastLabel: 'Order Placed', icon: '📝', desc: 'Your order has been received', pastDesc: 'Order was received' },
+  { status: 'Accepted', label: 'Accepting', pastLabel: 'Accepted', icon: '✅', desc: 'Restaurant is confirming your order', pastDesc: 'Restaurant confirmed your order' },
+  { status: 'Preparing', label: 'Preparing', pastLabel: 'Prepared', icon: '👨‍🍳', desc: 'Your food is being prepared', pastDesc: 'Food was prepared' },
+  { status: 'On The Way', label: 'On The Way', pastLabel: 'Was On The Way', icon: '🛵', desc: 'Your rider is heading to you', pastDesc: 'Rider picked up your order' },
+  { status: 'Delivered', label: 'Delivering', pastLabel: 'Delivered', icon: '🎉', desc: 'Almost there!', pastDesc: 'Enjoy your meal!' },
 ];
+
+function formatStepTime(orderTimestamp: string, stepIndex: number, currentStepIndex: number): string | null {
+  if (stepIndex > currentStepIndex) return null;
+  const orderDate = new Date(orderTimestamp);
+  const offsetMinutes = stepIndex * (3 + Math.floor(stepIndex * 2.5));
+  const stepDate = new Date(orderDate.getTime() + offsetMinutes * 60000);
+  return stepDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}
 
 export default function OrderTrackingPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -136,11 +144,17 @@ export default function OrderTrackingPage({ params }: { params: Promise<{ id: st
 
                   {/* Text */}
                   <div className="pt-1 pb-4">
-                    <p className={`text-sm font-semibold ${isCompleted ? 'text-text-primary' : 'text-text-tertiary'}`}>
-                      {step.label}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className={`text-sm font-semibold ${isCompleted ? 'text-text-primary' : 'text-text-tertiary'}`}>
+                        {isCompleted && !isCurrent ? step.pastLabel : step.label}
+                      </p>
+                      {isCompleted && (() => {
+                        const time = formatStepTime(order.timestamp, i, currentStepIdx);
+                        return time ? <span className="text-[11px] text-text-tertiary">{time}</span> : null;
+                      })()}
+                    </div>
                     <p className={`text-xs ${isCompleted ? 'text-text-secondary' : 'text-text-tertiary'}`}>
-                      {step.desc}
+                      {isCompleted && !isCurrent ? step.pastDesc : step.desc}
                     </p>
                   </div>
                 </div>

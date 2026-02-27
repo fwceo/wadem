@@ -41,6 +41,8 @@ export default function LoginPage() {
       referralCode: firebaseUser.uid.slice(0, 8).toUpperCase(),
       preferences: [],
       dietaryRestrictions: [],
+      freeDeliveries: 4,
+      hasSeenFreeDeliveryModal: false,
     });
 
     // Redirect to original page or onboarding/home

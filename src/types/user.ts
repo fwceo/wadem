@@ -31,4 +31,6 @@ export interface UserProfile {
   referredBy?: string;
   preferences: string[];
   dietaryRestrictions: string[];
+  freeDeliveries?: number;
+  hasSeenFreeDeliveryModal?: boolean;
 }

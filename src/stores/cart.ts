@@ -14,6 +14,7 @@ interface CartState {
   discount: number;
   deliveryFee: number;
   serviceFee: number;
+  freeDeliveryApplied: boolean;
 
   addItem: (
     item: MenuItem,
@@ -26,6 +27,7 @@ interface CartState {
   updateQuantity: (cartItemId: string, qty: number) => void;
   applyPromo: (code: string, discount: number) => void;
   removePromo: () => void;
+  applyFreeDelivery: () => void;
   clearCart: () => void;
   setRestaurant: (id: string, name: string) => void;
 
@@ -60,6 +62,7 @@ export const useCartStore = create<CartState>()(
       discount: 0,
       deliveryFee: 3000,
       serviceFee: 1500,
+      freeDeliveryApplied: false,
 
       addItem: (item, qty, customizations = [], restaurantId, restaurantName) => {
         const totalPrice = calculateItemPrice(item, qty, customizations);
@@ -108,6 +111,7 @@ export const useCartStore = create<CartState>()(
 
       applyPromo: (code, discount) => set({ promoCode: code, discount }),
       removePromo: () => set({ promoCode: null, discount: 0 }),
+      applyFreeDelivery: () => set({ freeDeliveryApplied: true }),
 
       clearCart: () =>
         set({
@@ -116,6 +120,7 @@ export const useCartStore = create<CartState>()(
           restaurantName: null,
           promoCode: null,
           discount: 0,
+          freeDeliveryApplied: false,
         }),
 
       setRestaurant: (id, name) => set({ restaurantId: id, restaurantName: name }),
@@ -125,7 +130,8 @@ export const useCartStore = create<CartState>()(
       getTotal: () => {
         const state = get();
         const subtotal = state.items.reduce((sum, item) => sum + item.totalPrice, 0);
-        return Math.max(0, subtotal + state.deliveryFee + state.serviceFee - state.discount);
+        const effectiveDeliveryFee = state.freeDeliveryApplied ? 0 : state.deliveryFee;
+        return Math.max(0, subtotal + effectiveDeliveryFee + state.serviceFee - state.discount);
       },
 
       getItemCount: () => get().items.reduce((sum, item) => sum + item.quantity, 0),

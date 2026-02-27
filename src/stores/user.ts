@@ -21,6 +21,8 @@ interface UserState {
   addSavedAddress: (address: SavedAddress) => void;
   removeSavedAddress: (id: string) => void;
   setDefaultAddress: (id: string) => void;
+  useFreeDelivery: () => void;
+  setFreeDeliveryModalSeen: () => void;
   logout: () => void;
 }
 
@@ -110,6 +112,16 @@ export const useUserStore = create<UserState>()(
           };
         }),
       setLoading: (isLoading) => set({ isLoading }),
+      useFreeDelivery: () =>
+        set((state) => {
+          if (!state.user || !state.user.freeDeliveries || state.user.freeDeliveries <= 0) return {};
+          return { user: { ...state.user, freeDeliveries: state.user.freeDeliveries - 1 } };
+        }),
+      setFreeDeliveryModalSeen: () =>
+        set((state) => {
+          if (!state.user) return {};
+          return { user: { ...state.user, hasSeenFreeDeliveryModal: true } };
+        }),
       logout: () => {
         // Clear server session cookie
         fetch('/api/auth/session', { method: 'DELETE' }).catch(() => {});

@@ -26,14 +26,17 @@ export default function CartSheet() {
     discount,
     deliveryFee,
     serviceFee,
+    freeDeliveryApplied,
     removeItem,
     updateQuantity,
     clearCart,
     getSubtotal,
     getTotal,
+    applyFreeDelivery,
   } = useCartStore();
   const addOrder = useOrdersStore((s) => s.addOrder);
   const user = useUserStore((s) => s.user);
+  const useFreeDelivery = useUserStore((s) => s.useFreeDelivery);
 
   const hasAddress = !!(user?.address?.formatted && user.address.formatted.trim());
 
@@ -96,6 +99,11 @@ export default function CartSheet() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(order),
       });
+
+      // Decrement free delivery if used
+      if (freeDeliveryApplied) {
+        useFreeDelivery();
+      }
 
       setOrderPlaced(true);
     } catch {
@@ -389,7 +397,11 @@ export default function CartSheet() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-text-secondary">Delivery Fee</span>
-                  <span className="text-text-primary">{formatPrice(deliveryFee)}</span>
+                  {freeDeliveryApplied ? (
+                    <span className="text-accent font-medium">Free 🎉</span>
+                  ) : (
+                    <span className="text-text-primary">{formatPrice(deliveryFee)}</span>
+                  )}
                 </div>
                 <div className="flex justify-between">
                   <span className="text-text-secondary">Service Fee</span>
@@ -482,7 +494,13 @@ export default function CartSheet() {
               <div className="p-4">
                 {!showCheckout ? (
                   <motion.div whileTap={{ scale: 0.98 }}>
-                    <Button fullWidth size="lg" onClick={() => setShowCheckout(true)}>
+                    <Button fullWidth size="lg" onClick={() => {
+                      // Auto-apply free delivery if user has remaining
+                      if (!freeDeliveryApplied && (user?.freeDeliveries ?? 0) > 0) {
+                        applyFreeDelivery();
+                      }
+                      setShowCheckout(true);
+                    }}>
                       Checkout — {formatPrice(total)}
                     </Button>
                   </motion.div>

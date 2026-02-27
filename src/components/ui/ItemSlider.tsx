@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { MenuItem } from '@/types/restaurant';
@@ -23,7 +23,6 @@ interface ItemSliderProps {
   onItemTap?: (item: MenuItem) => void;
 }
 
-const SLIDE_INTERVAL = 4000;
 const SWIPE_THRESHOLD = 50;
 
 const slideVariants = {
@@ -44,8 +43,6 @@ const slideVariants = {
 export default function ItemSlider({ items, onItemTap }: ItemSliderProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [isPaused, setIsPaused] = useState(false);
-  const pauseTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Filter to non-drink/sauce items with images, take 5
   const sliderItems = items
@@ -71,29 +68,13 @@ export default function ItemSlider({ items, onItemTap }: ItemSliderProps) {
     setActiveIndex(idx);
   }, [activeIndex]);
 
-  // Auto-rotate
-  useEffect(() => {
-    if (isPaused || count <= 1) return;
-    const interval = setInterval(goToNext, SLIDE_INTERVAL);
-    return () => clearInterval(interval);
-  }, [isPaused, goToNext, count]);
-
-  // Pause on swipe, resume after 6s
-  const handleSwipePause = useCallback(() => {
-    setIsPaused(true);
-    if (pauseTimeout.current) clearTimeout(pauseTimeout.current);
-    pauseTimeout.current = setTimeout(() => setIsPaused(false), 6000);
-  }, []);
-
   const handleDragEnd = useCallback((_: unknown, info: PanInfo) => {
     if (info.offset.x > SWIPE_THRESHOLD) {
       goToPrev();
-      handleSwipePause();
     } else if (info.offset.x < -SWIPE_THRESHOLD) {
       goToNext();
-      handleSwipePause();
     }
-  }, [goToNext, goToPrev, handleSwipePause]);
+  }, [goToNext, goToPrev]);
 
   if (count === 0) return null;
 
@@ -170,7 +151,7 @@ export default function ItemSlider({ items, onItemTap }: ItemSliderProps) {
           {sliderItems.map((_, i) => (
             <button
               key={i}
-              onClick={() => { goToIndex(i); handleSwipePause(); }}
+              onClick={() => goToIndex(i)}
               className="p-0.5"
               aria-label={`Go to slide ${i + 1}`}
             >

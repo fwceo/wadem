@@ -9,8 +9,8 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Wadem — Fast Food Delivery for Office Workers",
-  description: "The fastest food delivery app. Order lunch in under 60 seconds.",
+  title: "Wadem — Food Delivery, Simplified",
+  description: "The food delivery app that's actually a food delivery app.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

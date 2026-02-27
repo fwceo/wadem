@@ -22,7 +22,7 @@ Rules:
 
 RESPONSE FORMAT (strict JSON):
 {
-  "title": "Short combo name (e.g. 'The Office Power Lunch')",
+  "title": "Short combo name (e.g. 'The Perfect Lunch Combo')",
   "items": [
     {
       "role": "main" | "side" | "drink" | "dessert",

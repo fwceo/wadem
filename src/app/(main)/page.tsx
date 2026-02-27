@@ -136,7 +136,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Promo Banners — Speed, Office, AI-Concierge */}
+        {/* Promo Banners — Speed, Delivery, AI-Concierge */}
         <div className="px-4 md:px-6 pt-5">
           <PromoBanners />
         </div>

@@ -122,7 +122,7 @@ export default function LoginPage() {
           <Image src="/wadem-logo.png" alt="Wadem" width={80} height={80} className="w-full h-full object-contain" />
         </div>
         <h1 className="text-4xl font-extrabold text-secondary tracking-tight mb-1">Wadem</h1>
-        <p className="text-secondary/60 text-sm">Order fast. Eat well. Get back to work.</p>
+        <p className="text-secondary/60 text-sm">The food delivery app that&apos;s actually a food delivery app.</p>
       </div>
 
       <div

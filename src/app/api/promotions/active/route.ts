@@ -36,10 +36,10 @@ export async function GET() {
       targetAudience: 'all',
     },
     {
-      code: 'OFFICE20',
+      code: 'WADEM20',
       type: 'percentage',
       value: 20,
-      description: '20% off orders over 50,000 IQD (team ordering)',
+      description: '20% off orders over 50,000 IQD',
       minOrder: 50000,
       targetAudience: 'all',
     },

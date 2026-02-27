@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
@@ -38,6 +38,8 @@ export default function ProfilePage() {
   const router = useRouter();
   const { user, logout, updateProfile, addSavedAddress, removeSavedAddress, setDefaultAddress } = useUserStore();
   const { addToast } = useUIStore();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   // Edit profile sheet
   const [showEditProfile, setShowEditProfile] = useState(false);
@@ -124,6 +126,23 @@ export default function ProfilePage() {
     logout();
     router.push('/login');
   };
+
+  if (!mounted) {
+    return (
+      <div className="px-4 pt-4 pb-24">
+        <h1 className="text-[28px] font-extrabold text-text-primary mb-5">Profile</h1>
+        <div className="space-y-4">
+          <div className="flex items-center gap-4 bg-white rounded-2xl p-4 shadow-sm animate-pulse">
+            <div className="w-16 h-16 rounded-full bg-gray-200" />
+            <div className="flex-1 space-y-2">
+              <div className="h-5 w-32 bg-gray-200 rounded" />
+              <div className="h-4 w-48 bg-gray-200 rounded" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="px-4 pt-4 pb-24">

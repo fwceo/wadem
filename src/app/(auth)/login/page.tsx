@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { useUserStore } from '@/stores/user';
@@ -118,21 +117,15 @@ export default function LoginPage() {
       />
       <div className="absolute inset-0 bg-gradient-to-b from-primary/50 via-primary/75 to-primary/90 backdrop-blur-sm z-0" />
 
-      <motion.div
-        initial={{ scale: 1, opacity: 1 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="relative z-10 mb-10 text-center login-entrance"
-      >
+      <div className="relative z-10 mb-10 text-center login-entrance">
         <div className="w-20 h-20 rounded-2xl overflow-hidden mx-auto mb-4 shadow-md ring-4 ring-white/20">
           <Image src="/wadem-logo.png" alt="Wadem" width={80} height={80} className="w-full h-full object-contain" />
         </div>
         <h1 className="text-4xl font-extrabold text-secondary tracking-tight mb-1">Wadem</h1>
         <p className="text-secondary/60 text-sm">Order fast. Eat well. Get back to work.</p>
-      </motion.div>
+      </div>
 
-      <motion.div
-        initial={{ y: 0, opacity: 1 }}
-        animate={{ y: 0, opacity: 1 }}
+      <div
         className="relative z-10 w-full max-w-sm space-y-4 login-entrance"
         style={{ animationDelay: '0.1s' }}
       >
@@ -213,7 +206,7 @@ export default function LoginPage() {
           </svg>
           Continue with Google
         </Button>
-      </motion.div>
+      </div>
     </div>
   );
 }

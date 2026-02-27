@@ -61,10 +61,10 @@ export default function OnboardingPage() {
         {step === 'name' && (
           <motion.div
             key="name"
-            initial={{ x: 50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
             exit={{ x: -50, opacity: 0 }}
-            className="relative z-10 w-full max-w-sm"
+            className="relative z-10 w-full max-w-sm login-entrance"
           >
             <div className="bg-white/95 backdrop-blur-md rounded-3xl p-8 shadow-xl text-center">
               <h1 className="text-[28px] font-extrabold text-secondary mb-2">
@@ -91,10 +91,10 @@ export default function OnboardingPage() {
         {step === 'location' && (
           <motion.div
             key="location"
-            initial={{ x: 50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
             exit={{ x: -50, opacity: 0 }}
-            className="relative z-10 w-full max-w-md"
+            className="relative z-10 w-full max-w-md login-entrance"
           >
             <div className="bg-white/95 backdrop-blur-md rounded-3xl p-6 shadow-xl">
               <div className="text-center mb-4">

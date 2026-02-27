@@ -13,7 +13,7 @@ import { useUIStore } from '@/stores/ui';
 import SmartComboDice from '@/components/home/SmartComboDice';
 import { Restaurant, MenuCategory, MenuItem, Customization, CustomizationOption } from '@/types';
 import { SelectedCustomization } from '@/types/order';
-import { formatDeliveryTime } from '@/lib/utils';
+import { formatDeliveryTime, formatPrice } from '@/lib/utils';
 
 export default function RestaurantPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -205,8 +205,6 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
       return { ...prev, [customization.id]: [...current, option] };
     });
   };
-
-  const formatPrice = (price: number) => `${price.toLocaleString()} IQD`;
 
   // --- Loading state ---
   if (loading) {

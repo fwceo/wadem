@@ -52,52 +52,57 @@ export default function CartSheet() {
   const handlePlaceOrder = async () => {
     setIsPlacing(true);
 
-    const orderId = generateOrderId();
-    const orderItems = items.map((ci) => ({
-      menuItemId: ci.menuItem.id,
-      name: ci.menuItem.name,
-      quantity: ci.quantity,
-      price: ci.menuItem.price,
-      customizations: ci.customizations,
-      totalPrice: ci.totalPrice,
-    }));
+    try {
+      const orderId = generateOrderId();
+      const orderItems = items.map((ci) => ({
+        menuItemId: ci.menuItem.id,
+        name: ci.menuItem.name,
+        quantity: ci.quantity,
+        price: ci.menuItem.price,
+        customizations: ci.customizations,
+        totalPrice: ci.totalPrice,
+      }));
 
-    const order: Order = {
-      id: orderId,
-      timestamp: new Date().toISOString(),
-      customerName: user?.name || '',
-      customerPhone: user?.phone || '',
-      customerUid: user?.uid || '',
-      deliveryAddress: user?.address?.formatted || '',
-      latLng: user?.address?.lat && user?.address?.lng ? `${user.address.lat},${user.address.lng}` : '',
-      restaurantId: restaurantId || '',
-      restaurantName: restaurantName || '',
-      items: orderItems,
-      subtotal,
-      deliveryFee,
-      serviceFee,
-      discount,
-      total,
-      promoCode: promoCode || null,
-      status: 'New',
-      paymentMethod: 'Cash on Delivery',
-      deliveryNotes,
-      estimatedDelivery: '25-35 min',
-    };
+      const order: Order = {
+        id: orderId,
+        timestamp: new Date().toISOString(),
+        customerName: user?.name || '',
+        customerPhone: user?.phone || '',
+        customerUid: user?.uid || '',
+        deliveryAddress: user?.address?.formatted || '',
+        latLng: user?.address?.lat && user?.address?.lng ? `${user.address.lat},${user.address.lng}` : '',
+        restaurantId: restaurantId || '',
+        restaurantName: restaurantName || '',
+        items: orderItems,
+        subtotal,
+        deliveryFee,
+        serviceFee,
+        discount,
+        total,
+        promoCode: promoCode || null,
+        status: 'New',
+        paymentMethod: 'Cash on Delivery',
+        deliveryNotes,
+        estimatedDelivery: '25-35 min',
+      };
 
-    // Save to local orders store
-    addOrder(order);
-    setLastOrderId(orderId);
+      // Save to local orders store
+      addOrder(order);
+      setLastOrderId(orderId);
 
-    // Also push to API (fire-and-forget)
-    fetch('/api/orders', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(order),
-    }).catch(() => {});
+      // Push to API
+      await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order),
+      });
 
-    setIsPlacing(false);
-    setOrderPlaced(true);
+      setOrderPlaced(true);
+    } catch {
+      addToast({ type: 'error', message: 'Failed to place order. Please try again.' });
+    } finally {
+      setIsPlacing(false);
+    }
   };
 
   const handleClearCart = useCallback(() => {
@@ -107,11 +112,31 @@ export default function CartSheet() {
     addToast({ type: 'info', message: 'Cart cleared' });
   }, [clearCart, addToast]);
 
-  const handleApplyPromo = () => {
-    if (!promoInput.trim()) return;
-    useCartStore.getState().applyPromo(promoInput.toUpperCase(), 5000);
-    setPromoInput('');
-    addToast({ type: 'success', message: `Promo ${promoInput.toUpperCase()} applied! -5,000 IQD` });
+  const [promoLoading, setPromoLoading] = useState(false);
+
+  const handleApplyPromo = async () => {
+    const code = promoInput.trim().toUpperCase();
+    if (!code) return;
+    setPromoLoading(true);
+    try {
+      const res = await fetch('/api/promotions/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, userId: user?.uid || '', orderTotal: subtotal }),
+      });
+      const data = await res.json();
+      if (data.valid && data.discount > 0) {
+        useCartStore.getState().applyPromo(code, data.discount);
+        setPromoInput('');
+        addToast({ type: 'success', message: data.message || `Promo ${code} applied! -${formatPrice(data.discount)}` });
+      } else {
+        addToast({ type: 'error', message: data.message || 'Invalid promo code' });
+      }
+    } catch {
+      addToast({ type: 'error', message: 'Failed to validate promo code' });
+    } finally {
+      setPromoLoading(false);
+    }
   };
 
   if (items.length === 0 && isCartOpen) {
@@ -399,18 +424,19 @@ export default function CartSheet() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="flex gap-2 mt-4"
                 >
-                  <input
-                    type="text"
-                    placeholder="🎟️ Enter promo code"
-                    value={promoInput}
-                    onChange={(e) => setPromoInput(e.target.value)}
-                    className="flex-1 bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-primary transition-colors"
-                  />
-                  <Button size="sm" onClick={handleApplyPromo} disabled={!promoInput.trim()}>
-                    Apply
-                  </Button>
+                  <form onSubmit={(e) => { e.preventDefault(); handleApplyPromo(); }} className="flex gap-2 mt-4">
+                    <input
+                      type="text"
+                      placeholder="🎟️ Enter promo code"
+                      value={promoInput}
+                      onChange={(e) => setPromoInput(e.target.value)}
+                      className="flex-1 bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm outline-none focus:border-primary transition-colors"
+                    />
+                    <Button type="submit" size="sm" onClick={handleApplyPromo} disabled={!promoInput.trim()} loading={promoLoading}>
+                      Apply
+                    </Button>
+                  </form>
                 </motion.div>
               )}
 

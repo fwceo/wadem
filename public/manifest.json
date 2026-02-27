@@ -1,0 +1,13 @@
+{
+  "name": "Wadem",
+  "short_name": "Wadem",
+  "description": "The fastest food delivery for office workers",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFC107",
+  "icons": [
+    { "src": "/wadem-logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/wadem-logo.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

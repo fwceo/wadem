@@ -1,0 +1,18 @@
+[
+  { "id": "all", "name": "All", "icon": "🍽️", "image": "/icons/cat-all.png" },
+  { "id": "pizza", "name": "Pizza", "icon": "🍕", "image": "/icons/cat-pizza.png" },
+  { "id": "burgers", "name": "Burgers", "icon": "🍔", "image": "/icons/cat-burger.png" },
+  { "id": "chicken", "name": "Chicken", "icon": "🍗", "image": "/icons/cat-chicken.png" },
+  { "id": "kebab", "name": "Kebab", "icon": "🥩", "image": "/icons/cat-kebab.png" },
+  { "id": "shawarma", "name": "Shawarma", "icon": "🌯", "image": "/icons/cat-shawarma.png" },
+  { "id": "sweets", "name": "Sweets", "icon": "🍰", "image": "/icons/cat-desserts.png" },
+  { "id": "coffee", "name": "Coffee", "icon": "☕", "image": "/icons/cat-coffee.png" },
+  { "id": "sushi", "name": "Sushi", "icon": "🍣", "image": "/icons/cat-sushi.png" },
+  { "id": "fast food", "name": "Fast Food", "icon": "🍟", "image": "/icons/cat-burger.png" },
+  { "id": "doner", "name": "Doner", "icon": "🥙", "image": "/icons/cat-doner.png" },
+  { "id": "pasta", "name": "Pasta", "icon": "🍝", "image": "/icons/cat-pasta.png" },
+  { "id": "grill", "name": "Grill", "icon": "🔥", "image": "/icons/cat-grill.png" },
+  { "id": "bakery", "name": "Bakery", "icon": "🥖", "image": "/icons/cat-bakery.png" },
+  { "id": "falafel", "name": "Falafel", "icon": "🧆", "image": "/icons/cat-falafel.png" },
+  { "id": "healthy", "name": "Healthy", "icon": "🥗", "image": "/icons/cat-healthy.png" }
+]

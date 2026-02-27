@@ -1,0 +1,1311 @@
+{
+  "restaurants": [
+    {
+      "id": "burger-palace",
+      "name": "Burger Palace",
+      "slug": "burger-palace",
+      "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=400&fit=crop",
+      "logo": "🍔",
+      "cuisine": ["American", "Burgers", "Fast Food"],
+      "rating": 4.5,
+      "reviewCount": 234,
+      "deliveryTime": { "min": 20, "max": 30 },
+      "deliveryFee": 2.99,
+      "minimumOrder": 10,
+      "isOpen": true,
+      "address": "123 Main St",
+      "phone": "+1234567890",
+      "hours": {
+        "monday": { "open": "10:00", "close": "22:00" },
+        "tuesday": { "open": "10:00", "close": "22:00" },
+        "wednesday": { "open": "10:00", "close": "22:00" },
+        "thursday": { "open": "10:00", "close": "22:00" },
+        "friday": { "open": "10:00", "close": "23:00" },
+        "saturday": { "open": "11:00", "close": "23:00" },
+        "sunday": { "open": "11:00", "close": "21:00" }
+      },
+      "promos": [
+        { "code": "BURGER20", "type": "percentage", "value": 20, "minOrder": 15 }
+      ],
+      "categories": [
+        {
+          "id": "popular",
+          "name": "Popular",
+          "items": [
+            {
+              "id": "classic-cheese",
+              "name": "Classic Cheeseburger",
+              "description": "Juicy beef patty with melted cheddar, lettuce, tomato, and our secret sauce",
+              "price": 8.99,
+              "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["bestseller"],
+              "prepTime": 12,
+              "calories": 650,
+              "customizations": [
+                {
+                  "id": "size",
+                  "name": "Size",
+                  "required": true,
+                  "type": "radio",
+                  "options": [
+                    { "id": "regular", "name": "Regular", "price": 0 },
+                    { "id": "large", "name": "Large (+$2)", "price": 2.00 }
+                  ]
+                },
+                {
+                  "id": "extras",
+                  "name": "Extras",
+                  "required": false,
+                  "type": "checkbox",
+                  "options": [
+                    { "id": "bacon", "name": "Add Bacon", "price": 1.50 },
+                    { "id": "avocado", "name": "Add Avocado", "price": 2.00 },
+                    { "id": "egg", "name": "Add Fried Egg", "price": 1.00 }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "double-smash",
+              "name": "Double Smash Burger",
+              "description": "Two smashed patties, American cheese, pickles, onions, and smoky sauce",
+              "price": 12.99,
+              "image": "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["bestseller", "spicy"],
+              "prepTime": 15,
+              "calories": 890,
+              "customizations": [
+                {
+                  "id": "size",
+                  "name": "Size",
+                  "required": true,
+                  "type": "radio",
+                  "options": [
+                    { "id": "regular", "name": "Regular", "price": 0 },
+                    { "id": "large", "name": "Large (+$3)", "price": 3.00 }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "mains",
+          "name": "Mains",
+          "items": [
+            {
+              "id": "bbq-burger",
+              "name": "BBQ Bacon Burger",
+              "description": "Beef patty, crispy bacon, cheddar, BBQ sauce, onion rings",
+              "price": 11.49,
+              "image": "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=200&h=200&fit=crop",
+              "category": "mains",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": [],
+              "prepTime": 14,
+              "calories": 780,
+              "customizations": []
+            },
+            {
+              "id": "mushroom-swiss",
+              "name": "Mushroom Swiss Burger",
+              "description": "Sauteed mushrooms, Swiss cheese, garlic aioli on brioche bun",
+              "price": 10.99,
+              "image": "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=200&h=200&fit=crop",
+              "category": "mains",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["vegetarian-option"],
+              "prepTime": 13,
+              "calories": 720,
+              "customizations": []
+            },
+            {
+              "id": "chicken-burger",
+              "name": "Crispy Chicken Sandwich",
+              "description": "Buttermilk fried chicken, coleslaw, pickles, spicy mayo",
+              "price": 9.99,
+              "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=200&h=200&fit=crop",
+              "category": "mains",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["spicy"],
+              "prepTime": 12,
+              "calories": 680,
+              "customizations": []
+            }
+          ]
+        },
+        {
+          "id": "sides",
+          "name": "Sides",
+          "items": [
+            {
+              "id": "fries",
+              "name": "Classic Fries",
+              "description": "Crispy golden fries with sea salt",
+              "price": 3.99,
+              "image": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=200&h=200&fit=crop",
+              "category": "sides",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["vegetarian"],
+              "prepTime": 8,
+              "calories": 380,
+              "customizations": []
+            },
+            {
+              "id": "onion-rings",
+              "name": "Onion Rings",
+              "description": "Beer-battered onion rings with ranch dip",
+              "price": 4.99,
+              "image": "https://images.unsplash.com/photo-1639024471283-03518883512d?w=200&h=200&fit=crop",
+              "category": "sides",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["vegetarian"],
+              "prepTime": 8,
+              "calories": 420,
+              "customizations": []
+            }
+          ]
+        },
+        {
+          "id": "drinks",
+          "name": "Drinks",
+          "items": [
+            {
+              "id": "milkshake",
+              "name": "Thick Milkshake",
+              "description": "Choose from chocolate, vanilla, or strawberry",
+              "price": 5.99,
+              "image": "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=200&h=200&fit=crop",
+              "category": "drinks",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": [],
+              "prepTime": 5,
+              "calories": 450,
+              "customizations": [
+                {
+                  "id": "flavor",
+                  "name": "Flavor",
+                  "required": true,
+                  "type": "radio",
+                  "options": [
+                    { "id": "chocolate", "name": "Chocolate", "price": 0 },
+                    { "id": "vanilla", "name": "Vanilla", "price": 0 },
+                    { "id": "strawberry", "name": "Strawberry", "price": 0 }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "soda",
+              "name": "Soda",
+              "description": "Coca-Cola, Sprite, or Fanta",
+              "price": 2.49,
+              "image": "https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=200&h=200&fit=crop",
+              "category": "drinks",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": [],
+              "prepTime": 2,
+              "calories": 150,
+              "customizations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sushi-express",
+      "name": "Sushi Express",
+      "slug": "sushi-express",
+      "image": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&h=400&fit=crop",
+      "logo": "🍣",
+      "cuisine": ["Japanese", "Sushi", "Asian"],
+      "rating": 4.8,
+      "reviewCount": 189,
+      "deliveryTime": { "min": 25, "max": 40 },
+      "deliveryFee": 0,
+      "minimumOrder": 15,
+      "isOpen": true,
+      "address": "456 Ocean Ave",
+      "phone": "+1234567891",
+      "hours": {
+        "monday": { "open": "11:00", "close": "21:30" },
+        "tuesday": { "open": "11:00", "close": "21:30" },
+        "wednesday": { "open": "11:00", "close": "21:30" },
+        "thursday": { "open": "11:00", "close": "21:30" },
+        "friday": { "open": "11:00", "close": "22:00" },
+        "saturday": { "open": "12:00", "close": "22:00" },
+        "sunday": { "open": "12:00", "close": "21:00" }
+      },
+      "promos": [],
+      "categories": [
+        {
+          "id": "popular",
+          "name": "Popular",
+          "items": [
+            {
+              "id": "salmon-roll",
+              "name": "Salmon Avocado Roll",
+              "description": "Fresh salmon, creamy avocado, cucumber, sesame seeds",
+              "price": 12.99,
+              "image": "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["healthy", "gluten-free"],
+              "prepTime": 15,
+              "calories": 320,
+              "customizations": []
+            },
+            {
+              "id": "dragon-roll",
+              "name": "Dragon Roll",
+              "description": "Shrimp tempura, avocado, eel sauce, spicy mayo",
+              "price": 15.99,
+              "image": "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["bestseller"],
+              "prepTime": 18,
+              "calories": 450,
+              "customizations": []
+            }
+          ]
+        },
+        {
+          "id": "rolls",
+          "name": "Specialty Rolls",
+          "items": [
+            {
+              "id": "spicy-tuna",
+              "name": "Spicy Tuna Roll",
+              "description": "Fresh tuna, spicy mayo, cucumber, tobiko",
+              "price": 13.99,
+              "image": "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=200&h=200&fit=crop",
+              "category": "rolls",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["spicy"],
+              "prepTime": 15,
+              "calories": 340,
+              "customizations": []
+            },
+            {
+              "id": "rainbow-roll",
+              "name": "Rainbow Roll",
+              "description": "California roll topped with assorted sashimi",
+              "price": 16.99,
+              "image": "https://images.unsplash.com/photo-1562802378-063ec186a863?w=200&h=200&fit=crop",
+              "category": "rolls",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["healthy"],
+              "prepTime": 20,
+              "calories": 380,
+              "customizations": []
+            }
+          ]
+        },
+        {
+          "id": "bowls",
+          "name": "Poke Bowls",
+          "items": [
+            {
+              "id": "salmon-poke",
+              "name": "Salmon Poke Bowl",
+              "description": "Salmon, rice, edamame, avocado, mango, ponzu dressing",
+              "price": 14.99,
+              "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200&h=200&fit=crop",
+              "category": "bowls",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["healthy"],
+              "prepTime": 10,
+              "calories": 520,
+              "customizations": [
+                {
+                  "id": "base",
+                  "name": "Base",
+                  "required": true,
+                  "type": "radio",
+                  "options": [
+                    { "id": "rice", "name": "Sushi Rice", "price": 0 },
+                    { "id": "brown-rice", "name": "Brown Rice", "price": 0 },
+                    { "id": "salad", "name": "Mixed Greens", "price": 0 }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "drinks",
+          "name": "Drinks",
+          "items": [
+            {
+              "id": "miso-soup",
+              "name": "Miso Soup",
+              "description": "Traditional miso with tofu, seaweed, and green onion",
+              "price": 3.99,
+              "image": "https://images.unsplash.com/photo-1607301405390-d831c242f59b?w=200&h=200&fit=crop",
+              "category": "drinks",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["vegetarian"],
+              "prepTime": 5,
+              "calories": 80,
+              "customizations": []
+            },
+            {
+              "id": "green-tea",
+              "name": "Japanese Green Tea",
+              "description": "Hot brewed sencha green tea",
+              "price": 2.99,
+              "image": "https://images.unsplash.com/photo-1556881286-fc6915169721?w=200&h=200&fit=crop",
+              "category": "drinks",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["healthy"],
+              "prepTime": 3,
+              "calories": 5,
+              "customizations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "green-bowl",
+      "name": "Green Bowl",
+      "slug": "green-bowl",
+      "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=400&fit=crop",
+      "logo": "🥗",
+      "cuisine": ["Healthy", "Salads", "Bowls"],
+      "rating": 4.6,
+      "reviewCount": 156,
+      "deliveryTime": { "min": 15, "max": 25 },
+      "deliveryFee": 1.99,
+      "minimumOrder": 12,
+      "isOpen": true,
+      "address": "789 Wellness Dr",
+      "phone": "+1234567892",
+      "hours": {
+        "monday": { "open": "08:00", "close": "20:00" },
+        "tuesday": { "open": "08:00", "close": "20:00" },
+        "wednesday": { "open": "08:00", "close": "20:00" },
+        "thursday": { "open": "08:00", "close": "20:00" },
+        "friday": { "open": "08:00", "close": "20:00" },
+        "saturday": { "open": "09:00", "close": "18:00" },
+        "sunday": { "open": "09:00", "close": "18:00" }
+      },
+      "promos": [
+        { "code": "GREEN15", "type": "percentage", "value": 15, "minOrder": 20 }
+      ],
+      "categories": [
+        {
+          "id": "popular",
+          "name": "Popular",
+          "items": [
+            {
+              "id": "acai-bowl",
+              "name": "Acai Power Bowl",
+              "description": "Acai blend, granola, banana, strawberries, honey drizzle",
+              "price": 11.99,
+              "image": "https://images.unsplash.com/photo-1590301157890-4810ed352733?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["healthy", "vegetarian", "bestseller"],
+              "prepTime": 8,
+              "calories": 380,
+              "customizations": []
+            },
+            {
+              "id": "chicken-caesar",
+              "name": "Grilled Chicken Caesar",
+              "description": "Romaine, grilled chicken, parmesan, croutons, caesar dressing",
+              "price": 12.99,
+              "image": "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["healthy"],
+              "prepTime": 10,
+              "calories": 420,
+              "customizations": [
+                {
+                  "id": "protein",
+                  "name": "Extra Protein",
+                  "required": false,
+                  "type": "checkbox",
+                  "options": [
+                    { "id": "extra-chicken", "name": "Extra Chicken", "price": 3.00 },
+                    { "id": "avocado", "name": "Add Avocado", "price": 2.00 }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "salads",
+          "name": "Salads",
+          "items": [
+            {
+              "id": "quinoa-salad",
+              "name": "Mediterranean Quinoa Salad",
+              "description": "Quinoa, chickpeas, feta, olives, cucumber, red onion, lemon vinaigrette",
+              "price": 11.49,
+              "image": "https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=200&h=200&fit=crop",
+              "category": "salads",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["vegetarian", "healthy", "gluten-free"],
+              "prepTime": 8,
+              "calories": 350,
+              "customizations": []
+            },
+            {
+              "id": "cobb-salad",
+              "name": "Classic Cobb Salad",
+              "description": "Mixed greens, chicken, bacon, egg, avocado, blue cheese, ranch",
+              "price": 13.49,
+              "image": "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200&h=200&fit=crop",
+              "category": "salads",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["healthy"],
+              "prepTime": 10,
+              "calories": 480,
+              "customizations": []
+            }
+          ]
+        },
+        {
+          "id": "smoothies",
+          "name": "Smoothies",
+          "items": [
+            {
+              "id": "green-smoothie",
+              "name": "Green Detox Smoothie",
+              "description": "Spinach, banana, mango, ginger, coconut water",
+              "price": 7.99,
+              "image": "https://images.unsplash.com/photo-1610970881699-44a5587cabec?w=200&h=200&fit=crop",
+              "category": "smoothies",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["healthy", "vegetarian", "vegan"],
+              "prepTime": 5,
+              "calories": 200,
+              "customizations": []
+            },
+            {
+              "id": "protein-shake",
+              "name": "Protein Power Shake",
+              "description": "Whey protein, banana, peanut butter, oat milk",
+              "price": 8.99,
+              "image": "https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=200&h=200&fit=crop",
+              "category": "smoothies",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["healthy"],
+              "prepTime": 5,
+              "calories": 350,
+              "customizations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pizza-roma",
+      "name": "Pizza Roma",
+      "slug": "pizza-roma",
+      "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&h=400&fit=crop",
+      "logo": "🍕",
+      "cuisine": ["Italian", "Pizza", "Pasta"],
+      "rating": 4.4,
+      "reviewCount": 312,
+      "deliveryTime": { "min": 25, "max": 35 },
+      "deliveryFee": 2.49,
+      "minimumOrder": 12,
+      "isOpen": true,
+      "address": "321 Italia Blvd",
+      "phone": "+1234567893",
+      "hours": {
+        "monday": { "open": "11:00", "close": "23:00" },
+        "tuesday": { "open": "11:00", "close": "23:00" },
+        "wednesday": { "open": "11:00", "close": "23:00" },
+        "thursday": { "open": "11:00", "close": "23:00" },
+        "friday": { "open": "11:00", "close": "00:00" },
+        "saturday": { "open": "11:00", "close": "00:00" },
+        "sunday": { "open": "12:00", "close": "22:00" }
+      },
+      "promos": [
+        { "code": "PIZZA30", "type": "percentage", "value": 30, "minOrder": 20 }
+      ],
+      "categories": [
+        {
+          "id": "popular",
+          "name": "Popular",
+          "items": [
+            {
+              "id": "margherita",
+              "name": "Margherita Pizza",
+              "description": "San Marzano tomatoes, fresh mozzarella, basil, olive oil",
+              "price": 13.99,
+              "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["vegetarian", "bestseller"],
+              "prepTime": 18,
+              "calories": 700,
+              "customizations": [
+                {
+                  "id": "size",
+                  "name": "Size",
+                  "required": true,
+                  "type": "radio",
+                  "options": [
+                    { "id": "medium", "name": "Medium (12\")", "price": 0 },
+                    { "id": "large", "name": "Large (16\") +$4", "price": 4.00 }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "pepperoni",
+              "name": "Classic Pepperoni",
+              "description": "Pepperoni, mozzarella, tomato sauce, oregano",
+              "price": 14.99,
+              "image": "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["bestseller"],
+              "prepTime": 18,
+              "calories": 850,
+              "customizations": [
+                {
+                  "id": "size",
+                  "name": "Size",
+                  "required": true,
+                  "type": "radio",
+                  "options": [
+                    { "id": "medium", "name": "Medium (12\")", "price": 0 },
+                    { "id": "large", "name": "Large (16\") +$4", "price": 4.00 }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "pizzas",
+          "name": "Specialty Pizzas",
+          "items": [
+            {
+              "id": "quattro-formaggi",
+              "name": "Quattro Formaggi",
+              "description": "Mozzarella, gorgonzola, parmesan, fontina, honey drizzle",
+              "price": 16.99,
+              "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&h=200&fit=crop",
+              "category": "pizzas",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["vegetarian"],
+              "prepTime": 20,
+              "calories": 900,
+              "customizations": []
+            },
+            {
+              "id": "diavola",
+              "name": "Diavola",
+              "description": "Spicy salami, chili flakes, mozzarella, tomato sauce",
+              "price": 15.99,
+              "image": "https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?w=200&h=200&fit=crop",
+              "category": "pizzas",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["spicy"],
+              "prepTime": 18,
+              "calories": 820,
+              "customizations": []
+            }
+          ]
+        },
+        {
+          "id": "pasta",
+          "name": "Pasta",
+          "items": [
+            {
+              "id": "carbonara",
+              "name": "Spaghetti Carbonara",
+              "description": "Guanciale, pecorino, egg yolk, black pepper",
+              "price": 13.49,
+              "image": "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=200&h=200&fit=crop",
+              "category": "pasta",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["bestseller"],
+              "prepTime": 15,
+              "calories": 650,
+              "customizations": []
+            }
+          ]
+        },
+        {
+          "id": "drinks",
+          "name": "Drinks",
+          "items": [
+            {
+              "id": "italian-soda",
+              "name": "Italian Sparkling Water",
+              "description": "San Pellegrino 500ml",
+              "price": 3.49,
+              "image": "https://images.unsplash.com/photo-1523362628745-0c100150b504?w=200&h=200&fit=crop",
+              "category": "drinks",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": [],
+              "prepTime": 1,
+              "calories": 0,
+              "customizations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bangkok-kitchen",
+      "name": "Bangkok Kitchen",
+      "slug": "bangkok-kitchen",
+      "image": "https://images.unsplash.com/photo-1559314809-0d155014e29e?w=800&h=400&fit=crop",
+      "logo": "🍜",
+      "cuisine": ["Thai", "Asian", "Noodles"],
+      "rating": 4.7,
+      "reviewCount": 178,
+      "deliveryTime": { "min": 20, "max": 30 },
+      "deliveryFee": 1.99,
+      "minimumOrder": 10,
+      "isOpen": true,
+      "address": "555 Spice Lane",
+      "phone": "+1234567894",
+      "hours": {
+        "monday": { "open": "11:00", "close": "22:00" },
+        "tuesday": { "open": "11:00", "close": "22:00" },
+        "wednesday": { "open": "11:00", "close": "22:00" },
+        "thursday": { "open": "11:00", "close": "22:00" },
+        "friday": { "open": "11:00", "close": "22:30" },
+        "saturday": { "open": "11:30", "close": "22:30" },
+        "sunday": { "open": "11:30", "close": "21:30" }
+      },
+      "promos": [],
+      "categories": [
+        {
+          "id": "popular",
+          "name": "Popular",
+          "items": [
+            {
+              "id": "pad-thai",
+              "name": "Pad Thai",
+              "description": "Rice noodles, shrimp, tofu, peanuts, bean sprouts, lime",
+              "price": 11.99,
+              "image": "https://images.unsplash.com/photo-1559314809-0d155014e29e?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["bestseller", "gluten-free"],
+              "prepTime": 15,
+              "calories": 550,
+              "customizations": [
+                {
+                  "id": "spice",
+                  "name": "Spice Level",
+                  "required": true,
+                  "type": "radio",
+                  "options": [
+                    { "id": "mild", "name": "Mild", "price": 0 },
+                    { "id": "medium", "name": "Medium", "price": 0 },
+                    { "id": "hot", "name": "Hot", "price": 0 },
+                    { "id": "thai-hot", "name": "Thai Hot 🔥", "price": 0 }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "green-curry",
+              "name": "Green Curry",
+              "description": "Chicken, Thai eggplant, bamboo shoots, basil, coconut milk",
+              "price": 12.99,
+              "image": "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["spicy", "gluten-free"],
+              "prepTime": 18,
+              "calories": 480,
+              "customizations": [
+                {
+                  "id": "spice",
+                  "name": "Spice Level",
+                  "required": true,
+                  "type": "radio",
+                  "options": [
+                    { "id": "mild", "name": "Mild", "price": 0 },
+                    { "id": "medium", "name": "Medium", "price": 0 },
+                    { "id": "hot", "name": "Hot", "price": 0 }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "mains",
+          "name": "Main Courses",
+          "items": [
+            {
+              "id": "massaman",
+              "name": "Massaman Curry",
+              "description": "Slow-cooked beef, potatoes, onions, peanuts in rich curry",
+              "price": 13.99,
+              "image": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=200&h=200&fit=crop",
+              "category": "mains",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["gluten-free"],
+              "prepTime": 20,
+              "calories": 580,
+              "customizations": []
+            },
+            {
+              "id": "basil-chicken",
+              "name": "Thai Basil Chicken",
+              "description": "Stir-fried chicken, holy basil, chili, garlic, jasmine rice",
+              "price": 11.49,
+              "image": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=200&h=200&fit=crop",
+              "category": "mains",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["spicy"],
+              "prepTime": 12,
+              "calories": 520,
+              "customizations": []
+            }
+          ]
+        },
+        {
+          "id": "appetizers",
+          "name": "Appetizers",
+          "items": [
+            {
+              "id": "spring-rolls",
+              "name": "Crispy Spring Rolls (4pc)",
+              "description": "Vegetables and glass noodles, sweet chili sauce",
+              "price": 6.99,
+              "image": "https://images.unsplash.com/photo-1548507200-e9e0eabb9f24?w=200&h=200&fit=crop",
+              "category": "appetizers",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["vegetarian"],
+              "prepTime": 10,
+              "calories": 280,
+              "customizations": []
+            },
+            {
+              "id": "satay",
+              "name": "Chicken Satay (4pc)",
+              "description": "Grilled chicken skewers with peanut sauce and cucumber relish",
+              "price": 8.99,
+              "image": "https://images.unsplash.com/photo-1529563021893-cc83c992d75d?w=200&h=200&fit=crop",
+              "category": "appetizers",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["gluten-free"],
+              "prepTime": 12,
+              "calories": 320,
+              "customizations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shawarma-house",
+      "name": "Shawarma House",
+      "slug": "shawarma-house",
+      "image": "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=800&h=400&fit=crop",
+      "logo": "🧆",
+      "cuisine": ["Middle Eastern", "Shawarma", "Halal"],
+      "rating": 4.6,
+      "reviewCount": 267,
+      "deliveryTime": { "min": 15, "max": 25 },
+      "deliveryFee": 1.49,
+      "minimumOrder": 8,
+      "isOpen": true,
+      "address": "200 Spice Market",
+      "phone": "+1234567895",
+      "hours": {
+        "monday": { "open": "10:00", "close": "23:00" },
+        "tuesday": { "open": "10:00", "close": "23:00" },
+        "wednesday": { "open": "10:00", "close": "23:00" },
+        "thursday": { "open": "10:00", "close": "23:00" },
+        "friday": { "open": "10:00", "close": "00:00" },
+        "saturday": { "open": "10:00", "close": "00:00" },
+        "sunday": { "open": "11:00", "close": "22:00" }
+      },
+      "promos": [
+        { "code": "SHAWARMA25", "type": "percentage", "value": 25, "minOrder": 15 }
+      ],
+      "categories": [
+        {
+          "id": "popular",
+          "name": "Popular",
+          "items": [
+            {
+              "id": "chicken-shawarma",
+              "name": "Chicken Shawarma Wrap",
+              "description": "Marinated chicken, garlic sauce, pickles, fries, wrapped in fresh bread",
+              "price": 8.99,
+              "image": "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["halal", "bestseller"],
+              "prepTime": 10,
+              "calories": 580,
+              "customizations": [
+                {
+                  "id": "sauce",
+                  "name": "Sauce",
+                  "required": true,
+                  "type": "radio",
+                  "options": [
+                    { "id": "garlic", "name": "Garlic Sauce", "price": 0 },
+                    { "id": "tahini", "name": "Tahini", "price": 0 },
+                    { "id": "both", "name": "Both Sauces", "price": 0 }
+                  ]
+                },
+                {
+                  "id": "extras",
+                  "name": "Extras",
+                  "required": false,
+                  "type": "checkbox",
+                  "options": [
+                    { "id": "extra-meat", "name": "Extra Meat", "price": 2.00 },
+                    { "id": "cheese", "name": "Add Cheese", "price": 1.00 },
+                    { "id": "hummus", "name": "Add Hummus", "price": 1.50 }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "mixed-grill",
+              "name": "Mixed Grill Plate",
+              "description": "Chicken, lamb kebab, rice, hummus, salad, pita bread",
+              "price": 15.99,
+              "image": "https://images.unsplash.com/photo-1544025162-d76694265947?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["halal"],
+              "prepTime": 18,
+              "calories": 720,
+              "customizations": []
+            }
+          ]
+        },
+        {
+          "id": "wraps",
+          "name": "Wraps & Sandwiches",
+          "items": [
+            {
+              "id": "falafel-wrap",
+              "name": "Falafel Wrap",
+              "description": "Crispy falafel, tahini, salad, pickled turnips in warm pita",
+              "price": 7.99,
+              "image": "https://images.unsplash.com/photo-1585238342024-78d387f4132e?w=200&h=200&fit=crop",
+              "category": "wraps",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["vegetarian", "vegan", "halal"],
+              "prepTime": 8,
+              "calories": 420,
+              "customizations": []
+            },
+            {
+              "id": "lamb-shawarma",
+              "name": "Lamb Shawarma Wrap",
+              "description": "Slow-roasted lamb, tahini, onions, parsley in fresh bread",
+              "price": 10.99,
+              "image": "https://images.unsplash.com/photo-1561651188-d207bbec4ec3?w=200&h=200&fit=crop",
+              "category": "wraps",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["halal"],
+              "prepTime": 10,
+              "calories": 620,
+              "customizations": []
+            }
+          ]
+        },
+        {
+          "id": "sides",
+          "name": "Sides",
+          "items": [
+            {
+              "id": "hummus-plate",
+              "name": "Hummus with Pita",
+              "description": "Creamy hummus, olive oil, warm pita bread",
+              "price": 5.99,
+              "image": "https://images.unsplash.com/photo-1577805947697-89e18249d767?w=200&h=200&fit=crop",
+              "category": "sides",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["vegetarian", "vegan"],
+              "prepTime": 5,
+              "calories": 300,
+              "customizations": []
+            },
+            {
+              "id": "fattoush",
+              "name": "Fattoush Salad",
+              "description": "Mixed greens, tomato, cucumber, radish, crispy pita chips, sumac dressing",
+              "price": 6.49,
+              "image": "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200&h=200&fit=crop",
+              "category": "sides",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["vegetarian", "healthy"],
+              "prepTime": 5,
+              "calories": 180,
+              "customizations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "taco-loco",
+      "name": "Taco Loco",
+      "slug": "taco-loco",
+      "image": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&h=400&fit=crop",
+      "logo": "🌮",
+      "cuisine": ["Mexican", "Tacos", "Burritos"],
+      "rating": 4.3,
+      "reviewCount": 198,
+      "deliveryTime": { "min": 20, "max": 30 },
+      "deliveryFee": 2.49,
+      "minimumOrder": 10,
+      "isOpen": true,
+      "address": "888 Fiesta Ave",
+      "phone": "+1234567896",
+      "hours": {
+        "monday": { "open": "10:00", "close": "22:00" },
+        "tuesday": { "open": "10:00", "close": "22:00" },
+        "wednesday": { "open": "10:00", "close": "22:00" },
+        "thursday": { "open": "10:00", "close": "22:00" },
+        "friday": { "open": "10:00", "close": "23:00" },
+        "saturday": { "open": "10:00", "close": "23:00" },
+        "sunday": { "open": "11:00", "close": "21:00" }
+      },
+      "promos": [],
+      "categories": [
+        {
+          "id": "popular",
+          "name": "Popular",
+          "items": [
+            {
+              "id": "al-pastor-tacos",
+              "name": "Al Pastor Tacos (3pc)",
+              "description": "Marinated pork, pineapple, cilantro, onion on corn tortillas",
+              "price": 10.99,
+              "image": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["bestseller"],
+              "prepTime": 12,
+              "calories": 480,
+              "customizations": [
+                {
+                  "id": "salsa",
+                  "name": "Salsa",
+                  "required": true,
+                  "type": "radio",
+                  "options": [
+                    { "id": "verde", "name": "Salsa Verde", "price": 0 },
+                    { "id": "roja", "name": "Salsa Roja", "price": 0 },
+                    { "id": "habanero", "name": "Habanero (Hot!)", "price": 0 }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "burrito-bowl",
+              "name": "Burrito Bowl",
+              "description": "Rice, black beans, chicken, pico de gallo, guacamole, sour cream",
+              "price": 12.49,
+              "image": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["gluten-free"],
+              "prepTime": 10,
+              "calories": 620,
+              "customizations": []
+            }
+          ]
+        },
+        {
+          "id": "burritos",
+          "name": "Burritos",
+          "items": [
+            {
+              "id": "carne-asada-burrito",
+              "name": "Carne Asada Burrito",
+              "description": "Grilled steak, rice, beans, cheese, guacamole in flour tortilla",
+              "price": 13.49,
+              "image": "https://images.unsplash.com/photo-1584208632869-05fa2b2a5934?w=200&h=200&fit=crop",
+              "category": "burritos",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": [],
+              "prepTime": 12,
+              "calories": 750,
+              "customizations": []
+            }
+          ]
+        },
+        {
+          "id": "sides",
+          "name": "Sides",
+          "items": [
+            {
+              "id": "chips-guac",
+              "name": "Chips & Guacamole",
+              "description": "Fresh tortilla chips with house-made guacamole",
+              "price": 5.99,
+              "image": "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=200&h=200&fit=crop",
+              "category": "sides",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["vegetarian", "vegan", "gluten-free"],
+              "prepTime": 5,
+              "calories": 320,
+              "customizations": []
+            },
+            {
+              "id": "mexican-rice",
+              "name": "Mexican Rice",
+              "description": "Seasoned rice with tomatoes, cilantro, lime",
+              "price": 3.49,
+              "image": "https://images.unsplash.com/photo-1536304929831-ee1ca9d44726?w=200&h=200&fit=crop",
+              "category": "sides",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["vegetarian", "vegan", "gluten-free"],
+              "prepTime": 5,
+              "calories": 220,
+              "customizations": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "daily-brew",
+      "name": "Daily Brew Coffee",
+      "slug": "daily-brew",
+      "image": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&h=400&fit=crop",
+      "logo": "☕",
+      "cuisine": ["Coffee", "Cafe", "Breakfast"],
+      "rating": 4.5,
+      "reviewCount": 145,
+      "deliveryTime": { "min": 10, "max": 20 },
+      "deliveryFee": 1.49,
+      "minimumOrder": 5,
+      "isOpen": true,
+      "address": "777 Brew St",
+      "phone": "+1234567897",
+      "hours": {
+        "monday": { "open": "06:00", "close": "18:00" },
+        "tuesday": { "open": "06:00", "close": "18:00" },
+        "wednesday": { "open": "06:00", "close": "18:00" },
+        "thursday": { "open": "06:00", "close": "18:00" },
+        "friday": { "open": "06:00", "close": "18:00" },
+        "saturday": { "open": "07:00", "close": "17:00" },
+        "sunday": { "open": "07:00", "close": "16:00" }
+      },
+      "promos": [
+        { "code": "COFFEE20", "type": "percentage", "value": 20, "minOrder": 8 }
+      ],
+      "categories": [
+        {
+          "id": "popular",
+          "name": "Popular",
+          "items": [
+            {
+              "id": "iced-latte",
+              "name": "Iced Caramel Latte",
+              "description": "Espresso, milk, caramel syrup, ice",
+              "price": 5.49,
+              "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["bestseller"],
+              "prepTime": 5,
+              "calories": 180,
+              "customizations": [
+                {
+                  "id": "milk",
+                  "name": "Milk",
+                  "required": true,
+                  "type": "radio",
+                  "options": [
+                    { "id": "whole", "name": "Whole Milk", "price": 0 },
+                    { "id": "oat", "name": "Oat Milk", "price": 0.50 },
+                    { "id": "almond", "name": "Almond Milk", "price": 0.50 }
+                  ]
+                },
+                {
+                  "id": "size",
+                  "name": "Size",
+                  "required": true,
+                  "type": "radio",
+                  "options": [
+                    { "id": "regular", "name": "Regular (12oz)", "price": 0 },
+                    { "id": "large", "name": "Large (16oz)", "price": 1.00 }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "avocado-toast",
+              "name": "Avocado Toast",
+              "description": "Sourdough, smashed avocado, cherry tomatoes, feta, everything seasoning",
+              "price": 9.99,
+              "image": "https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?w=200&h=200&fit=crop",
+              "category": "popular",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["vegetarian", "healthy"],
+              "prepTime": 8,
+              "calories": 350,
+              "customizations": [
+                {
+                  "id": "extras",
+                  "name": "Add-ons",
+                  "required": false,
+                  "type": "checkbox",
+                  "options": [
+                    { "id": "egg", "name": "Poached Egg", "price": 1.50 },
+                    { "id": "salmon", "name": "Smoked Salmon", "price": 3.00 }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "coffee",
+          "name": "Coffee",
+          "items": [
+            {
+              "id": "americano",
+              "name": "Americano",
+              "description": "Double espresso with hot water",
+              "price": 3.99,
+              "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefda?w=200&h=200&fit=crop",
+              "category": "coffee",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": [],
+              "prepTime": 3,
+              "calories": 15,
+              "customizations": []
+            },
+            {
+              "id": "cappuccino",
+              "name": "Cappuccino",
+              "description": "Espresso with steamed milk foam",
+              "price": 4.99,
+              "image": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=200&h=200&fit=crop",
+              "category": "coffee",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": [],
+              "prepTime": 4,
+              "calories": 120,
+              "customizations": []
+            },
+            {
+              "id": "matcha-latte",
+              "name": "Matcha Latte",
+              "description": "Ceremonial grade matcha with steamed milk",
+              "price": 5.99,
+              "image": "https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=200&h=200&fit=crop",
+              "category": "coffee",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["healthy"],
+              "prepTime": 5,
+              "calories": 160,
+              "customizations": []
+            }
+          ]
+        },
+        {
+          "id": "pastries",
+          "name": "Pastries",
+          "items": [
+            {
+              "id": "croissant",
+              "name": "Butter Croissant",
+              "description": "Flaky, buttery French croissant",
+              "price": 3.49,
+              "image": "https://images.unsplash.com/photo-1555507036-ab1f4038024a?w=200&h=200&fit=crop",
+              "category": "pastries",
+              "isPopular": true,
+              "isAvailable": true,
+              "tags": ["vegetarian"],
+              "prepTime": 2,
+              "calories": 280,
+              "customizations": []
+            },
+            {
+              "id": "blueberry-muffin",
+              "name": "Blueberry Muffin",
+              "description": "Fresh blueberries, streusel topping",
+              "price": 3.99,
+              "image": "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=200&h=200&fit=crop",
+              "category": "pastries",
+              "isPopular": false,
+              "isAvailable": true,
+              "tags": ["vegetarian"],
+              "prepTime": 2,
+              "calories": 340,
+              "customizations": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

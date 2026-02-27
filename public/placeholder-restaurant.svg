@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250" fill="none">
+  <rect width="400" height="250" fill="#F3F4F6"/>
+  <circle cx="200" cy="110" r="40" fill="#E5E7EB"/>
+  <text x="200" y="118" text-anchor="middle" font-size="36" fill="#9CA3AF">🍽️</text>
+  <text x="200" y="170" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#9CA3AF">No image available</text>
+</svg>

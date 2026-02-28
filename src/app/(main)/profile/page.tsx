@@ -36,7 +36,7 @@ const CUISINE_PREFS = [
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, logout, updateProfile, addSavedAddress, removeSavedAddress, setDefaultAddress } = useUserStore();
+  const { user, isAuthenticated, logout, updateProfile, addSavedAddress, removeSavedAddress, setDefaultAddress } = useUserStore();
   const { addToast } = useUIStore();
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
@@ -343,42 +343,50 @@ export default function ProfilePage() {
           </button>
         </div>
 
-        {/* ─── Sign Out + Delete ─── */}
-        <div className="space-y-2">
-          <Button variant="secondary" fullWidth onClick={handleLogout}>
-            Sign Out
-          </Button>
-          {!showDeleteConfirm ? (
-            <button
-              onClick={() => setShowDeleteConfirm(true)}
-              className="w-full text-center text-sm text-red-400 hover:text-red-500 py-2 transition-colors"
-            >
-              Delete Account
-            </button>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              className="bg-red-50 rounded-xl p-3 flex items-center justify-between overflow-hidden"
-            >
-              <span className="text-sm text-red-700">Are you sure?</span>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setShowDeleteConfirm(false)}
-                  className="text-sm font-medium text-text-secondary px-3 py-1 rounded-lg bg-white"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => { handleLogout(); addToast({ type: 'info', message: 'Account deleted' }); }}
-                  className="text-sm font-medium text-white px-3 py-1 rounded-lg bg-red-500"
-                >
-                  Delete
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </div>
+        {/* ─── Sign Out + Delete (only if authenticated) ─── */}
+        {isAuthenticated ? (
+          <div className="space-y-2">
+            <Button variant="secondary" fullWidth onClick={handleLogout}>
+              Sign Out
+            </Button>
+            {!showDeleteConfirm ? (
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="w-full text-center text-sm text-red-400 hover:text-red-500 py-2 transition-colors"
+              >
+                Delete Account
+              </button>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="bg-red-50 rounded-xl p-3 flex items-center justify-between overflow-hidden"
+              >
+                <span className="text-sm text-red-700">Are you sure?</span>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowDeleteConfirm(false)}
+                    className="text-sm font-medium text-text-secondary px-3 py-1 rounded-lg bg-white"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => { handleLogout(); addToast({ type: 'info', message: 'Account deleted' }); }}
+                    className="text-sm font-medium text-white px-3 py-1 rounded-lg bg-red-500"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <Button fullWidth onClick={() => router.push('/login')}>
+              Sign In
+            </Button>
+          </div>
+        )}
 
         {/* App version */}
         <p className="text-center text-xs text-text-tertiary pb-4">

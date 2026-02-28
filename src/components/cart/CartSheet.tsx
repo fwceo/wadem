@@ -36,6 +36,7 @@ export default function CartSheet() {
   } = useCartStore();
   const addOrder = useOrdersStore((s) => s.addOrder);
   const user = useUserStore((s) => s.user);
+  const isAuthenticated = useUserStore((s) => s.isAuthenticated);
   const useFreeDelivery = useUserStore((s) => s.useFreeDelivery);
 
   // Check active address, fallback to first saved address
@@ -501,13 +502,17 @@ export default function CartSheet() {
                 {!showCheckout ? (
                   <motion.div whileTap={{ scale: 0.98 }}>
                     <Button fullWidth size="lg" onClick={() => {
-                      // Auto-apply free delivery if user has remaining
+                      if (!isAuthenticated) {
+                        closeCart();
+                        router.push('/login?redirect=/');
+                        return;
+                      }
                       if (!freeDeliveryApplied && (user?.freeDeliveries ?? 0) > 0) {
                         applyFreeDelivery();
                       }
                       setShowCheckout(true);
                     }}>
-                      Checkout — {formatPrice(total)}
+                      {isAuthenticated ? `Checkout — ${formatPrice(total)}` : 'Sign in to checkout'}
                     </Button>
                   </motion.div>
                 ) : (

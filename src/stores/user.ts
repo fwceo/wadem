@@ -26,19 +26,6 @@ interface UserState {
   logout: () => void;
 }
 
-const emptyUser = (phone: string): UserProfile => ({
-  uid: '',
-  name: '',
-  phone,
-  address: { formatted: '', lat: 0, lng: 0 },
-  savedAddresses: [],
-  signupDate: new Date().toISOString(),
-  totalOrders: 0,
-  totalSpent: 0,
-  referralCode: '',
-  preferences: [],
-  dietaryRestrictions: [],
-});
 
 export const useUserStore = create<UserState>()(
   persist(
@@ -54,15 +41,11 @@ export const useUserStore = create<UserState>()(
       setUser: (user) => set({ user: { ...user, savedAddresses: user.savedAddresses || [] }, isAuthenticated: true }),
       setName: (name) =>
         set((state) => ({
-          user: state.user
-            ? { ...state.user, name }
-            : { ...emptyUser(state.phone), name },
+          user: state.user ? { ...state.user, name } : null,
         })),
       setAddress: (address) =>
         set((state) => ({
-          user: state.user
-            ? { ...state.user, address }
-            : { ...emptyUser(state.phone), address },
+          user: state.user ? { ...state.user, address } : null,
         })),
       updateProfile: (fields) =>
         set((state) => ({

@@ -20,7 +20,10 @@ export default function HomePage() {
   const router = useRouter();
   const openAI = useUIStore((s) => s.openAI);
   const isAuthenticated = useUserStore((s) => s.isAuthenticated);
+  const [mounted, setMounted] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
+
+  useEffect(() => { setMounted(true); }, []);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
@@ -173,8 +176,8 @@ export default function HomePage() {
               key={selectedCategory}
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
             >
-              {(isAuthenticated ? filteredRestaurants : filteredRestaurants.slice(0, 21)).map((restaurant, i) => {
-                const isLastLocked = !isAuthenticated && i === 20;
+              {((!mounted || isAuthenticated) ? filteredRestaurants : filteredRestaurants.slice(0, 21)).map((restaurant, i) => {
+                const isLastLocked = mounted && !isAuthenticated && i === 20;
                 return (
                   <div
                     key={restaurant.id}

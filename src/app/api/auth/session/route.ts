@@ -38,8 +38,7 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch (err) {
-    console.error('Session creation failed:', err);
+  } catch {
     return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
   }
 }

@@ -1,14 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateOrderId } from '@/lib/utils';
 import { sheetsService } from '@/lib/sheets';
+import { getAuthenticatedUid } from '@/lib/auth-guard';
 
 export async function POST(request: NextRequest) {
   try {
+    // Verify authenticated user
+    const uid = await getAuthenticatedUid();
+    if (!uid) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
     const body = await request.json();
     const {
       customerName,
       customerPhone,
-      customerUid,
       deliveryAddress,
       restaurantId,
       restaurantName,
@@ -22,7 +28,10 @@ export async function POST(request: NextRequest) {
       deliveryNotes,
     } = body;
 
-    if (!customerUid || !restaurantId || !items?.length) {
+    // Use verified UID, not the one from the request body
+    const customerUid = uid;
+
+    if (!restaurantId || !items?.length) {
       return NextResponse.json(
         { error: 'Missing required fields', code: 400 },
         { status: 400 }

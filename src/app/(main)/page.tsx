@@ -181,20 +181,29 @@ export default function HomePage() {
                     className="animate-fade-in-up relative"
                     style={{ animationDelay: `${Math.min(i * 30, 300)}ms` }}
                   >
-                    <RestaurantCard restaurant={restaurant} />
-                    {isLocked && (
-                      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center z-10">
-                        <svg className="w-8 h-8 text-white/80 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                        <p className="text-white text-sm font-semibold mb-2">Login to view all restaurants</p>
-                        <button
-                          onClick={(e) => { e.preventDefault(); e.stopPropagation(); router.push('/login'); }}
-                          className="bg-primary text-secondary text-sm font-bold px-5 py-2 rounded-full hover:bg-primary-dark transition-colors"
-                        >
-                          Login
-                        </button>
+                    {isLocked ? (
+                      <div className="bg-white rounded-2xl overflow-hidden">
+                        <div className="relative aspect-[16/10] w-full bg-gray-100">
+                          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center">
+                            <svg className="w-8 h-8 text-white/80 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            <p className="text-white text-sm font-semibold mb-2">Login to view all restaurants</p>
+                            <button
+                              onClick={() => router.push('/login')}
+                              className="bg-primary text-secondary text-sm font-bold px-5 py-2 rounded-full hover:bg-primary-dark transition-colors"
+                            >
+                              Login
+                            </button>
+                          </div>
+                        </div>
+                        <div className="px-3 py-2.5">
+                          <div className="h-5 w-3/4 bg-gray-200 rounded" />
+                          <div className="h-4 w-1/2 bg-gray-100 rounded mt-1.5" />
+                        </div>
                       </div>
+                    ) : (
+                      <RestaurantCard restaurant={restaurant} />
                     )}
                   </div>
                 );

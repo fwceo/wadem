@@ -54,9 +54,9 @@ export default function BottomSheet({
             style={{ opacity: backdropOpacity }}
             onClick={onClose}
           />
-          <div className="fixed bottom-0 left-0 right-0 md:inset-0 md:flex md:items-center md:justify-center z-50 pointer-events-none">
+          <div className="fixed bottom-0 left-0 right-0 md:inset-0 md:flex md:items-end md:justify-center z-50 pointer-events-none">
             <motion.div
-              className="pointer-events-auto bg-surface rounded-t-2xl md:rounded-2xl md:w-full md:max-w-lg w-full flex flex-col overflow-hidden touch-none md:mx-auto"
+              className="pointer-events-auto bg-surface rounded-t-2xl md:rounded-t-2xl md:w-full md:max-w-lg w-full flex flex-col overflow-hidden touch-none md:mx-auto"
               style={{ maxHeight: height, y }}
               initial={{ y: '100%' }}
               animate={{ y: 0 }}

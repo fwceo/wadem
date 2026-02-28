@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useUserStore } from '@/stores/user';
 import { useWeather, getTimeOfDay } from '@/hooks/useWeather';
 
-const REFRESH_INTERVAL = 45_000; // 45 seconds
+const REFRESH_INTERVAL = 5 * 60_000; // 5 minutes
 
 export default function TypewriterGreeting() {
   const user = useUserStore((s) => s.user);

@@ -29,14 +29,21 @@ export default function LoginPage() {
   const [passwordInput, setPasswordInput] = useState('');
 
   const handleUserResult = async (firebaseUser: { uid: string; displayName: string | null; email: string | null; phoneNumber?: string | null; getIdToken: () => Promise<string> }) => {
+    let sessionSet = false;
     try {
       const token = await firebaseUser.getIdToken();
-      await fetch('/api/auth/session', {
+      const res = await fetch('/api/auth/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token }),
       });
-    } catch { /* continue */ }
+      sessionSet = res.ok;
+    } catch { /* session creation failed — user can still use the app client-side */ }
+
+    if (!sessionSet) {
+      // Session cookie wasn't set — protected API routes (orders) won't work
+      // but user can still browse restaurants and add to cart
+    }
 
     setUser({
       uid: firebaseUser.uid,

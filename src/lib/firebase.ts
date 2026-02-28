@@ -52,9 +52,9 @@ export async function signInWithGoogle() {
   return signInWithPopup(getFirebaseAuth(), provider);
 }
 
-// Test phone number for development
-const TEST_PHONE = '+9647501234567';
-const TEST_OTP = '123456';
+// Test phone number — only exposed in development builds
+const TEST_PHONE = process.env.NODE_ENV === 'development' ? '+9647501234567' : '';
+const TEST_OTP = process.env.NODE_ENV === 'development' ? '123456' : '';
 
 export function setupRecaptcha(elementId: string): RecaptchaVerifier {
   const auth = getFirebaseAuth();

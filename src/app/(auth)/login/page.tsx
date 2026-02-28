@@ -45,25 +45,62 @@ export default function LoginPage() {
       // but user can still browse restaurants and add to cart
     }
 
-    setUser({
-      uid: firebaseUser.uid,
-      name: firebaseUser.displayName || nameInput || '',
-      phone: firebaseUser.phoneNumber || phoneInput || '',
-      email: firebaseUser.email || emailInput || '',
-      address: { formatted: '', lat: 0, lng: 0 },
-      signupDate: new Date().toISOString(),
-      totalOrders: 0,
-      totalSpent: 0,
-      referralCode: firebaseUser.uid.slice(0, 8).toUpperCase(),
-      preferences: [],
-      dietaryRestrictions: [],
-      freeDeliveries: 4,
-      hasSeenFreeDeliveryModal: false,
-    });
+    // Try to fetch existing profile from backend (restores addresses, preferences, etc.)
+    let existingProfile = null;
+    if (sessionSet) {
+      try {
+        const profileRes = await fetch('/api/user/profile');
+        const profileData = await profileRes.json();
+        if (profileData.profile) existingProfile = profileData.profile;
+      } catch { /* new user — no profile yet */ }
+    }
+
+    if (existingProfile) {
+      // Returning user — restore full profile from backend
+      setUser({
+        uid: firebaseUser.uid,
+        name: existingProfile.name || firebaseUser.displayName || nameInput || '',
+        phone: existingProfile.phone || firebaseUser.phoneNumber || phoneInput || '',
+        email: existingProfile.email || firebaseUser.email || emailInput || '',
+        address: existingProfile.address || { formatted: '', lat: 0, lng: 0 },
+        savedAddresses: existingProfile.savedAddresses || [],
+        signupDate: existingProfile.signupDate || new Date().toISOString(),
+        totalOrders: existingProfile.totalOrders || 0,
+        totalSpent: existingProfile.totalSpent || 0,
+        referralCode: existingProfile.referralCode || firebaseUser.uid.slice(0, 8).toUpperCase(),
+        preferences: existingProfile.preferences || [],
+        dietaryRestrictions: existingProfile.dietaryRestrictions || [],
+        freeDeliveries: existingProfile.freeDeliveries ?? 4,
+        hasSeenFreeDeliveryModal: true,
+      });
+    } else {
+      // New user — create fresh profile
+      setUser({
+        uid: firebaseUser.uid,
+        name: firebaseUser.displayName || nameInput || '',
+        phone: firebaseUser.phoneNumber || phoneInput || '',
+        email: firebaseUser.email || emailInput || '',
+        address: { formatted: '', lat: 0, lng: 0 },
+        signupDate: new Date().toISOString(),
+        totalOrders: 0,
+        totalSpent: 0,
+        referralCode: firebaseUser.uid.slice(0, 8).toUpperCase(),
+        preferences: [],
+        dietaryRestrictions: [],
+        freeDeliveries: 4,
+        hasSeenFreeDeliveryModal: false,
+      });
+    }
 
     const params = new URLSearchParams(window.location.search);
     const redirect = params.get('redirect');
-    router.push(redirect || '/onboarding');
+
+    // If returning user with an address, go straight to home. New user goes to onboarding.
+    if (existingProfile?.savedAddresses?.length > 0) {
+      router.push(redirect || '/');
+    } else {
+      router.push(redirect || '/onboarding');
+    }
   };
 
   // --- Phone Auth ---

@@ -4,6 +4,16 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { DeliveryAddress, SavedAddress, UserProfile } from '@/types';
 
+// Sync user profile to backend (fire-and-forget)
+function syncToBackend(user: UserProfile | null) {
+  if (!user || !user.uid) return;
+  fetch('/api/user/profile', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(user),
+  }).catch(() => {});
+}
+
 interface UserState {
   user: UserProfile | null;
   isAuthenticated: boolean;
@@ -38,45 +48,56 @@ export const useUserStore = create<UserState>()(
 
       setPhone: (phone) => set({ phone }),
       setConfirmationResult: (result) => set({ confirmationResult: result }),
-      setUser: (user) => set({ user: { ...user, savedAddresses: user.savedAddresses || [] }, isAuthenticated: true }),
+      setUser: (user) => {
+        const fullUser = { ...user, savedAddresses: user.savedAddresses || [] };
+        set({ user: fullUser, isAuthenticated: true });
+        syncToBackend(fullUser);
+      },
       setName: (name) =>
-        set((state) => ({
-          user: state.user ? { ...state.user, name } : null,
-        })),
+        set((state) => {
+          if (!state.user) return {};
+          const updated = { ...state.user, name };
+          syncToBackend(updated);
+          return { user: updated };
+        }),
       setAddress: (address) =>
-        set((state) => ({
-          user: state.user ? { ...state.user, address } : null,
-        })),
+        set((state) => {
+          if (!state.user) return {};
+          const updated = { ...state.user, address };
+          syncToBackend(updated);
+          return { user: updated };
+        }),
       updateProfile: (fields) =>
-        set((state) => ({
-          user: state.user ? { ...state.user, ...fields } : null,
-        })),
+        set((state) => {
+          if (!state.user) return {};
+          const updated = { ...state.user, ...fields };
+          syncToBackend(updated);
+          return { user: updated };
+        }),
       addSavedAddress: (address) =>
         set((state) => {
           if (!state.user) return {};
           const existing = state.user.savedAddresses || [];
-          // If new address is default, unset others
           const updated = address.isDefault
             ? existing.map((a) => ({ ...a, isDefault: false }))
             : existing;
-          return {
-            user: {
-              ...state.user,
-              savedAddresses: [...updated, address],
-              // Also set as active address if default
-              ...(address.isDefault ? { address } : {}),
-            },
+          const newUser = {
+            ...state.user,
+            savedAddresses: [...updated, address],
+            ...(address.isDefault ? { address } : {}),
           };
+          syncToBackend(newUser);
+          return { user: newUser };
         }),
       removeSavedAddress: (id) =>
         set((state) => {
           if (!state.user) return {};
-          return {
-            user: {
-              ...state.user,
-              savedAddresses: (state.user.savedAddresses || []).filter((a) => a.id !== id),
-            },
+          const newUser = {
+            ...state.user,
+            savedAddresses: (state.user.savedAddresses || []).filter((a) => a.id !== id),
           };
+          syncToBackend(newUser);
+          return { user: newUser };
         }),
       setDefaultAddress: (id) =>
         set((state) => {
@@ -86,19 +107,21 @@ export const useUserStore = create<UserState>()(
             isDefault: a.id === id,
           }));
           const defaultAddr = addresses.find((a) => a.isDefault);
-          return {
-            user: {
-              ...state.user,
-              savedAddresses: addresses,
-              ...(defaultAddr ? { address: defaultAddr } : {}),
-            },
+          const newUser = {
+            ...state.user,
+            savedAddresses: addresses,
+            ...(defaultAddr ? { address: defaultAddr } : {}),
           };
+          syncToBackend(newUser);
+          return { user: newUser };
         }),
       setLoading: (isLoading) => set({ isLoading }),
       useFreeDelivery: () =>
         set((state) => {
           if (!state.user || !state.user.freeDeliveries || state.user.freeDeliveries <= 0) return {};
-          return { user: { ...state.user, freeDeliveries: state.user.freeDeliveries - 1 } };
+          const newUser = { ...state.user, freeDeliveries: state.user.freeDeliveries - 1 };
+          syncToBackend(newUser);
+          return { user: newUser };
         }),
       setFreeDeliveryModalSeen: () =>
         set((state) => {

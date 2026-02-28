@@ -153,7 +153,7 @@ class SheetsService {
   }
 
   // ── Customers ───────────────────────────────────────
-  // Columns: UID | Name | Phone | Email | Address | SignupDate | TotalOrders | TotalSpent | ReferralCode | Preferences
+  // Columns: UID | Name | Phone | Email | Address(JSON) | SignupDate | TotalOrders | TotalSpent | ReferralCode | Preferences(JSON) | SavedAddresses(JSON) | FreeDeliveries | DietaryRestrictions(JSON)
 
   async upsertCustomer(customer: Record<string, unknown>): Promise<void> {
     if (!this.isConfigured) return;
@@ -165,19 +165,22 @@ class SheetsService {
       customer.name as string || '',
       customer.phone as string || '',
       customer.email as string || '',
-      customer.address as string || '',
+      JSON.stringify(customer.address || {}),
       customer.signupDate as string || new Date().toISOString(),
       String(customer.totalOrders || 0),
       String(customer.totalSpent || 0),
       customer.referralCode as string || '',
       JSON.stringify(customer.preferences || []),
+      JSON.stringify(customer.savedAddresses || []),
+      String(customer.freeDeliveries ?? 4),
+      JSON.stringify(customer.dietaryRestrictions || []),
     ];
 
     if (idx >= 0) {
       const sheets = await this.getClient();
       await sheets.spreadsheets.values.update({
         spreadsheetId: this.sheetId,
-        range: `${TABS.CUSTOMERS}!A${idx + 1}:J${idx + 1}`,
+        range: `${TABS.CUSTOMERS}!A${idx + 1}:M${idx + 1}`,
         valueInputOption: 'USER_ENTERED',
         requestBody: { values: [values] },
       });
@@ -191,11 +194,20 @@ class SheetsService {
     const rows = await this.getRows(TABS.CUSTOMERS);
     const row = rows.find((r) => r[0] === userId);
     if (!row) return null;
+    let address = {};
+    try { address = JSON.parse(row[4] || '{}'); } catch { address = { formatted: row[4] || '' }; }
+    let savedAddresses = [];
+    try { savedAddresses = JSON.parse(row[10] || '[]'); } catch { savedAddresses = []; }
+    let preferences = [];
+    try { preferences = JSON.parse(row[9] || '[]'); } catch { preferences = []; }
+    let dietaryRestrictions = [];
+    try { dietaryRestrictions = JSON.parse(row[12] || '[]'); } catch { dietaryRestrictions = []; }
     return {
       uid: row[0], name: row[1], phone: row[2], email: row[3],
-      address: row[4], signupDate: row[5],
+      address, signupDate: row[5],
       totalOrders: Number(row[6]) || 0, totalSpent: Number(row[7]) || 0,
-      referralCode: row[8], preferences: JSON.parse(row[9] || '[]'),
+      referralCode: row[8], preferences, savedAddresses,
+      freeDeliveries: Number(row[11]) ?? 4, dietaryRestrictions,
     };
   }
 

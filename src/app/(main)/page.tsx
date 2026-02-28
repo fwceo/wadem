@@ -97,7 +97,7 @@ export default function HomePage() {
 
       <div className="max-w-7xl mx-auto">
         {/* Category Pills — horizontal scroll with menu button */}
-        <div className="sticky top-14 md:top-16 z-20 bg-white/80 backdrop-blur-xl border-b border-white/50 shadow-sm">
+        <div className="sticky top-14 md:top-16 z-20 bg-background border-b border-border-light">
           <div className="flex items-center">
             <button
               onClick={() => setShowCategoryModal(true)}

@@ -323,7 +323,7 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
 
         {/* Category Tabs — above everything */}
         {hasMenu && (
-          <div className="sticky top-14 md:top-16 z-20 bg-white/80 backdrop-blur-xl border-b border-white/50 shadow-sm">
+          <div className="sticky top-14 md:top-16 z-20 bg-white border-b border-border-light">
             <div className="flex items-center">
               {/* Menu nav button */}
               <motion.button
@@ -406,12 +406,14 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
               <div
                 key={category.id}
                 ref={(el) => { categoryRefs.current[category.id] = el; }}
-                className="pt-5"
+                className="pt-2"
               >
-                <h3 className="text-lg font-bold text-secondary px-4 md:px-6 mb-2">
-                  {category.name}
-                  <span className="text-text-tertiary text-sm font-normal ml-2">({category.items.length})</span>
-                </h3>
+                <div className="sticky top-[104px] md:top-[112px] z-10 bg-gray-50/90 backdrop-blur-sm border-y border-border-light px-4 md:px-6 py-2.5">
+                  <h3 className="text-[15px] font-bold text-secondary">
+                    {category.name}
+                    <span className="text-text-tertiary text-sm font-normal ml-2">({category.items.length})</span>
+                  </h3>
+                </div>
                 <div className="divide-y divide-border-light">
                   {category.items.map((item) => (
                     <div

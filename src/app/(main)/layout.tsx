@@ -15,15 +15,18 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const isAuthenticated = useUserStore((s) => s.isAuthenticated);
   const logout = useUserStore((s) => s.logout);
 
-  // Clear stale user state if no session cookie exists
+  // Validate session on mount — if user claims authenticated but server says no, clear state
   useEffect(() => {
-    if (isAuthenticated) {
-      const hasSession = document.cookie.includes('__session');
-      if (!hasSession) {
-        logout();
-      }
-    }
-  }, [isAuthenticated, logout]);
+    if (!isAuthenticated) return;
+    // Check session validity via a lightweight API call (cookie is httpOnly, can't read from JS)
+    fetch('/api/auth/session', { method: 'GET' })
+      .then((res) => {
+        if (res.status === 405 || res.status === 200) return; // session route exists, session valid or method not needed
+        if (res.status === 401) logout(); // session invalid
+      })
+      .catch(() => {}); // network error — don't logout
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">

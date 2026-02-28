@@ -34,10 +34,13 @@ export default function TopBar() {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [showDropdown]);
 
-  const hasAddress = mounted && user?.address?.formatted && user.address.formatted.trim();
   const savedAddresses = (mounted && user?.savedAddresses) || [];
+  const activeAddr = (mounted && user?.address?.formatted && user.address.formatted.trim())
+    ? user.address
+    : savedAddresses.find((a) => a.isDefault) || savedAddresses[0] || null;
+  const hasAddress = !!activeAddr;
   const addressText = hasAddress
-    ? truncateText(user!.address.formatted, 30)
+    ? truncateText(activeAddr!.formatted, 30)
     : 'Add address';
 
   const initials = mounted && user?.name

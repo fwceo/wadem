@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,7 +14,14 @@ const MapPicker = dynamic(() => import('@/components/ui/MapPicker'), { ssr: fals
 export default function OnboardingPage() {
   const router = useRouter();
   const { user, setName, setAddress, addSavedAddress } = useUserStore();
-  const [step, setStep] = useState<'name' | 'location'>(user?.name ? 'location' : 'name');
+  const [mounted, setMounted] = useState(false);
+  const [step, setStep] = useState<'name' | 'location'>('name');
+
+  // After Zustand hydrates, skip name step if user has a name
+  useEffect(() => {
+    setMounted(true);
+    if (user?.name) setStep('location');
+  }, [user?.name]);
   const [nameInput, setNameInput] = useState(user?.name || '');
   const [addressTitle, setAddressTitle] = useState('');
   const [addressInput, setAddressInput] = useState('');

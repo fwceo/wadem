@@ -38,7 +38,11 @@ export default function CartSheet() {
   const user = useUserStore((s) => s.user);
   const useFreeDelivery = useUserStore((s) => s.useFreeDelivery);
 
-  const hasAddress = !!(user?.address?.formatted && user.address.formatted.trim());
+  // Check active address, fallback to first saved address
+  const activeAddress = (user?.address?.formatted && user.address.formatted.trim())
+    ? user.address
+    : user?.savedAddresses?.find((a) => a.isDefault) || user?.savedAddresses?.[0] || null;
+  const hasAddress = !!activeAddress;
 
   const [promoInput, setPromoInput] = useState('');
   const [showCheckout, setShowCheckout] = useState(false);
@@ -74,8 +78,8 @@ export default function CartSheet() {
         customerName: user?.name || '',
         customerPhone: user?.phone || '',
         customerUid: user?.uid || '',
-        deliveryAddress: user?.address?.formatted || '',
-        latLng: user?.address?.lat && user?.address?.lng ? `${user.address.lat},${user.address.lng}` : '',
+        deliveryAddress: activeAddress?.formatted || '',
+        latLng: activeAddress?.lat && activeAddress?.lng ? `${activeAddress.lat},${activeAddress.lng}` : '',
         restaurantId: restaurantId || '',
         restaurantName: restaurantName || '',
         items: orderItems,
@@ -469,7 +473,7 @@ export default function CartSheet() {
                     <div className={`rounded-xl p-3 ${hasAddress ? 'bg-gray-50' : 'bg-red-50 border border-red-200'}`}>
                       <p className="text-xs text-text-secondary mb-1">Delivery Address</p>
                       {hasAddress ? (
-                        <p className="text-sm font-medium text-text-primary">{user?.address?.formatted}</p>
+                        <p className="text-sm font-medium text-text-primary">{activeAddress?.formatted}</p>
                       ) : (
                         <button
                           onClick={() => { closeCart(); router.push('/onboarding'); }}

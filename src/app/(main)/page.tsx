@@ -109,21 +109,21 @@ export default function HomePage() {
               </svg>
             </button>
             <div className="flex-1 overflow-x-auto no-scrollbar">
-              <div className="flex gap-2 px-3 py-3">
+              <div className="flex gap-2.5 px-3 py-3">
                 {categories.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat.id)}
-                    className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all duration-150 active:scale-[0.92] ${
+                    className={`flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full text-[15px] font-medium border transition-all duration-150 active:scale-[0.92] ${
                       selectedCategory === cat.id
                         ? 'bg-secondary text-white border-secondary shadow-md'
                         : 'bg-white text-secondary border-border hover:border-secondary/30 hover:shadow-sm'
                     }`}
                   >
                     {cat.image ? (
-                      <Image src={cat.image} alt={cat.name} width={24} height={24} className="w-6 h-6 object-contain" />
+                      <Image src={cat.image} alt={cat.name} width={28} height={28} className="w-7 h-7 object-contain" />
                     ) : (
-                      <span>{cat.icon}</span>
+                      <span className="text-lg">{cat.icon}</span>
                     )}
                     <span>{cat.name}</span>
                   </button>

@@ -5,9 +5,12 @@ import {
   signInWithPopup,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPhoneNumber,
+  RecaptchaVerifier,
   updateProfile,
   type Auth,
   type UserCredential,
+  type ConfirmationResult,
 } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -49,4 +52,26 @@ export async function signInWithGoogle() {
   return signInWithPopup(getFirebaseAuth(), provider);
 }
 
-export { type UserCredential };
+// Test phone number for development
+const TEST_PHONE = '+9647501234567';
+const TEST_OTP = '123456';
+
+export function setupRecaptcha(elementId: string): RecaptchaVerifier {
+  const auth = getFirebaseAuth();
+  return new RecaptchaVerifier(auth, elementId, {
+    size: 'invisible',
+    callback: () => {},
+  });
+}
+
+export async function sendPhoneOTP(phone: string, recaptchaVerifier: RecaptchaVerifier): Promise<ConfirmationResult> {
+  const auth = getFirebaseAuth();
+  // For test number, skip real OTP in development
+  if (phone === TEST_PHONE && process.env.NODE_ENV === 'development') {
+    // Firebase test numbers are configured in the Firebase Console
+    // This just sends the OTP normally — the test number auto-verifies with TEST_OTP
+  }
+  return signInWithPhoneNumber(auth, phone, recaptchaVerifier);
+}
+
+export { type UserCredential, type ConfirmationResult, TEST_PHONE, TEST_OTP };

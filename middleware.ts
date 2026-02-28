@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Public page routes that never require auth
+// Public pages — accessible without auth
 const PUBLIC_PAGES = new Set(['/login', '/onboarding', '/verify']);
+
+// Browsable pages — accessible after "Skip" (no session needed)
+const BROWSABLE_PAGES = new Set(['/', '/search']);
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -11,22 +14,28 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check for session cookie
+  // Allow browsable pages (home, search) — users who skipped can see these
+  if (BROWSABLE_PAGES.has(pathname)) {
+    return NextResponse.next();
+  }
+
+  // Allow restaurant detail pages for browsing
+  if (pathname.startsWith('/restaurant/')) {
+    return NextResponse.next();
+  }
+
+  // Protected pages (orders, profile) require session
   const session = request.cookies.get('__session')?.value;
 
   if (!session) {
     const loginUrl = new URL('/login', request.url);
-    if (pathname !== '/') {
-      loginUrl.searchParams.set('redirect', pathname);
-    }
+    loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();
 }
 
-// ONLY run middleware on these explicit page routes.
-// This ensures _next/*, api/*, static assets are NEVER intercepted.
 export const config = {
   matcher: [
     '/',

@@ -96,9 +96,9 @@ const SmartComboDice = forwardRef<HTMLDivElement, SmartComboDiceProps>(
     return (
       <div
         key={item.id}
-        className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm max-w-[220px]"
+        className="bg-white rounded-xl overflow-hidden border border-border-light"
       >
-        <div className="relative aspect-[4/3] bg-gray-50">
+        <div className="relative aspect-[4/3] bg-gray-100">
           {item.image ? (
             <Image
               src={item.image}
@@ -115,26 +115,26 @@ const SmartComboDice = forwardRef<HTMLDivElement, SmartComboDiceProps>(
           <button
             onClick={() => handleAdd(item)}
             disabled={isAdded}
-            className={`absolute bottom-2 right-2 w-8 h-8 rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-all duration-150 ${
+            className={`absolute bottom-2 right-2 w-7 h-7 rounded-full flex items-center justify-center shadow-md active:scale-90 transition-all duration-150 ${
               isAdded
                 ? 'bg-accent text-white'
                 : 'bg-white text-secondary hover:bg-gray-50'
             }`}
           >
             {isAdded ? (
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
               </svg>
             ) : (
-              <span className="text-lg font-bold leading-none">+</span>
+              <span className="text-base font-bold leading-none">+</span>
             )}
           </button>
         </div>
-        <div className="px-2.5 py-2">
-          <p className="text-[13px] font-semibold text-secondary leading-tight line-clamp-2">
+        <div className="px-3 py-2">
+          <p className="text-sm font-semibold text-secondary leading-tight line-clamp-2">
             {item.name}
           </p>
-          <p className="text-[13px] font-bold text-secondary mt-1">
+          <p className="text-sm font-bold text-secondary mt-1">
             IQD {item.price.toLocaleString()}
           </p>
         </div>

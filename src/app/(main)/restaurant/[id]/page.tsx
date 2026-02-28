@@ -323,7 +323,7 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
 
         {/* Category Tabs — above everything */}
         {hasMenu && (
-          <div className="sticky top-14 md:top-16 z-20 bg-white border-b border-border-light">
+          <div className="sticky top-14 md:top-16 z-20 bg-white/80 backdrop-blur-xl border-b border-white/50 shadow-sm">
             <div className="flex items-center">
               {/* Menu nav button */}
               <motion.button

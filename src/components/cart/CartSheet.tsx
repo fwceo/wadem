@@ -100,12 +100,39 @@ export default function CartSheet() {
       addOrder(order);
       setLastOrderId(orderId);
 
-      // Push to API
+      // Push to Google Sheets
       await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(order),
       });
+
+      // Push to Lezzoo logistics (real driver dispatch)
+      try {
+        const lezzooRes = await fetch('/api/orders/lezzoo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customerName: user?.name || '',
+            customerPhone: user?.phone || '',
+            deliveryAddress: activeAddress?.formatted || '',
+            deliveryLat: activeAddress?.lat || 0,
+            deliveryLng: activeAddress?.lng || 0,
+            restaurantLezzooId: parseInt(restaurantId || '0') || 0,
+            items: orderItems,
+            subtotal,
+            total,
+            discount,
+            deliveryFee: freeDeliveryApplied ? 0 : deliveryFee,
+            wademOrderId: orderId,
+          }),
+        });
+        const lezzooData = await lezzooRes.json();
+        if (lezzooData.lezzooOrderId) {
+          // Store Lezzoo order ID for tracking
+          order.latLng = `lezzoo:${lezzooData.lezzooOrderId}`;
+        }
+      } catch { /* Lezzoo dispatch failed — order still saved locally */ }
 
       // Decrement free delivery if used
       if (freeDeliveryApplied) {

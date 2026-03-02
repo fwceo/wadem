@@ -39,8 +39,8 @@ export async function POST(request: NextRequest) {
         'x-api-key': API_KEY,
       },
       body: JSON.stringify({
-        verification_id: verificationId,
-        code,
+        verification_id: Number(verificationId),
+        code: String(code),
       }),
     });
 

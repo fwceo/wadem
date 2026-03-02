@@ -50,42 +50,46 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: data.message || 'Invalid or expired code' }, { status: 400 });
     }
 
-    // OTP verified — create/get Firebase user + custom token for session
-    const auth = getAdminAuth();
+    // OTP verified — try to create/get Firebase user + custom token
+    const normalizedPhone = phone ? (phone.startsWith('+') ? phone : `+${phone}`) : '';
 
-    if (auth && phone) {
-      const normalizedPhone = phone.startsWith('+') ? phone : `+${phone}`;
-      let firebaseUser;
-      try {
-        firebaseUser = await auth.getUserByPhoneNumber(normalizedPhone);
-      } catch {
-        firebaseUser = await auth.createUser({
+    try {
+      const auth = getAdminAuth();
+      if (auth && normalizedPhone) {
+        let firebaseUser;
+        try {
+          firebaseUser = await auth.getUserByPhoneNumber(normalizedPhone);
+        } catch {
+          firebaseUser = await auth.createUser({
+            phoneNumber: normalizedPhone,
+            displayName: '',
+          });
+        }
+
+        const customToken = await auth.createCustomToken(firebaseUser.uid);
+
+        return NextResponse.json({
+          success: true,
+          verified: true,
+          uid: firebaseUser.uid,
+          customToken,
+          displayName: firebaseUser.displayName || '',
           phoneNumber: normalizedPhone,
-          displayName: '',
         });
       }
-
-      const customToken = await auth.createCustomToken(firebaseUser.uid);
-
-      return NextResponse.json({
-        success: true,
-        verified: true,
-        uid: firebaseUser.uid,
-        customToken,
-        displayName: firebaseUser.displayName || '',
-        phoneNumber: normalizedPhone,
-      });
+    } catch {
+      // Firebase Admin failed — fall through to fallback
     }
 
-    // Fallback if Firebase Admin not configured
-    const normalizedPhone = (phone || '').replace(/[\s\-]/g, '');
+    // Fallback — OTP was verified by Lezzoo, let user in without Firebase session
+    const uid = `phone_${normalizedPhone.replace(/\+/g, '')}`;
     return NextResponse.json({
       success: true,
       verified: true,
-      uid: `phone_${normalizedPhone}`,
+      uid,
       customToken: null,
       displayName: '',
-      phoneNumber: phone || '',
+      phoneNumber: normalizedPhone,
     });
   } catch {
     return NextResponse.json({ error: 'Verification failed' }, { status: 500 });

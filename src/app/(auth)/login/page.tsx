@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import OTPModal from '@/components/auth/OTPModal';
 import { useUserStore } from '@/stores/user';
 
 type AuthMode = 'phone' | 'email';
@@ -19,8 +20,9 @@ export default function LoginPage() {
   // Phone auth state
   const [phoneInput, setPhoneInput] = useState('+964');
   const [phoneStep, setPhoneStep] = useState<PhoneStep>('input');
-  const [otpInput, setOtpInput] = useState('');
-  const recaptchaRef = useRef<HTMLDivElement>(null);
+  const [verificationId, setVerificationId] = useState<number | null>(null);
+  const [otpError, setOtpError] = useState('');
+  const [otpLoading, setOtpLoading] = useState(false);
 
   // Email auth state
   const [isSignUp, setIsSignUp] = useState(false);
@@ -103,7 +105,7 @@ export default function LoginPage() {
     }
   };
 
-  // --- Phone Auth ---
+  // --- Phone Auth (Lezzoo OTP API) ---
   const handleSendOTP = async () => {
     if (phoneInput.length < 8) {
       setError('Please enter a valid phone number');
@@ -112,47 +114,70 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     try {
-      const fb = await import('@/lib/firebase');
-      const verifier = fb.setupRecaptcha('recaptcha-container');
-      const confirmation = await fb.sendPhoneOTP(phoneInput, verifier);
-      setPhone(phoneInput);
-      setConfirmationResult(confirmation);
-      setPhoneStep('otp');
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to send OTP';
-      if (msg.includes('too-many-requests')) {
-        setError('Too many attempts. Please try again later.');
-      } else if (msg.includes('invalid-phone-number')) {
-        setError('Invalid phone number format');
+      const res = await fetch('/api/auth/otp/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: phoneInput }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setVerificationId(data.verificationId);
+        setPhone(phoneInput);
+        setPhoneStep('otp');
+        if (data.throttled) {
+          setOtpError('Code already sent. Please check your SMS.');
+        }
       } else {
-        setError(msg);
+        setError(data.error || 'Failed to send code');
       }
+    } catch {
+      setError('Failed to send verification code');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleVerifyOTP = async () => {
-    if (otpInput.length < 6) {
-      setError('Please enter the 6-digit code');
-      return;
-    }
-    setError('');
-    setLoading(true);
+  const handleVerifyOTP = async (code: string) => {
+    setOtpError('');
+    setOtpLoading(true);
     try {
-      const confirmation = useUserStore.getState().confirmationResult as { confirm: (code: string) => Promise<{ user: { uid: string; displayName: string | null; email: string | null; phoneNumber: string | null; getIdToken: () => Promise<string> } }> } | null;
-      if (!confirmation) throw new Error('No confirmation result');
-      const result = await confirmation.confirm(otpInput);
-      handleUserResult(result.user);
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Invalid code';
-      if (msg.includes('invalid-verification-code')) {
-        setError('Incorrect code. Please try again.');
+      const res = await fetch('/api/auth/otp/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ verificationId, code, phone: phoneInput }),
+      });
+      const data = await res.json();
+      if (data.success && data.verified) {
+        // Sign in with custom token to get a session
+        if (data.customToken) {
+          const fb = await import('@/lib/firebase');
+          const { signInWithCustomToken } = await import('firebase/auth');
+          const auth = (await import('firebase/auth')).getAuth();
+          const cred = await signInWithCustomToken(auth, data.customToken);
+          await handleUserResult({
+            uid: cred.user.uid,
+            displayName: cred.user.displayName,
+            email: cred.user.email,
+            phoneNumber: cred.user.phoneNumber,
+            getIdToken: () => cred.user.getIdToken(),
+          });
+        } else {
+          // Fallback — use the uid from the response directly
+          handleUserResult({
+            uid: data.uid,
+            displayName: data.displayName || '',
+            email: null,
+            phoneNumber: data.phoneNumber || phoneInput,
+            getIdToken: async () => '',
+          });
+        }
       } else {
-        setError(msg);
+        setOtpError(data.error || 'Invalid code');
       }
+    } catch {
+      setOtpError('Verification failed. Please try again.');
     } finally {
-      setLoading(false);
+      setOtpLoading(false);
     }
   };
 
@@ -205,8 +230,16 @@ export default function LoginPage() {
       <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-dark to-primary z-0" />
       <div className="absolute inset-0 z-0 opacity-[0.07]" style={{ backgroundImage: 'radial-gradient(circle at 25% 25%, #111 1px, transparent 1px), radial-gradient(circle at 75% 75%, #111 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
 
-      {/* Recaptcha container (invisible) */}
-      <div id="recaptcha-container" ref={recaptchaRef} />
+      {/* OTP Verification Modal */}
+      <OTPModal
+        isOpen={phoneStep === 'otp'}
+        phone={phoneInput}
+        onVerify={handleVerifyOTP}
+        onResend={handleSendOTP}
+        onClose={() => { setPhoneStep('input'); setOtpError(''); }}
+        error={otpError}
+        loading={otpLoading}
+      />
 
       <div className="relative z-10 mb-8 text-center login-entrance">
         <div className="w-20 h-20 rounded-2xl overflow-hidden mx-auto mb-4 shadow-md ring-4 ring-white/20">
@@ -221,46 +254,18 @@ export default function LoginPage() {
         {/* Phone Auth (Primary) */}
         {authMode === 'phone' && (
           <div className="space-y-3">
-            {phoneStep === 'input' ? (
-              <>
-                <Input
-                  type="tel"
-                  placeholder="+964 7XX XXX XXXX"
-                  value={phoneInput}
-                  onChange={(e) => setPhoneInput(e.target.value)}
-                  className="bg-white shadow-sm text-base py-3.5"
-                  autoFocus
-                  error={error}
-                />
-                <Button fullWidth size="lg" onClick={handleSendOTP} loading={isLoading}>
-                  Send Verification Code
-                </Button>
-              </>
-            ) : (
-              <>
-                <p className="text-center text-sm text-secondary/70 mb-1">
-                  Code sent to <span className="font-semibold text-secondary">{phoneInput}</span>
-                </p>
-                <Input
-                  type="text"
-                  placeholder="Enter 6-digit code"
-                  value={otpInput}
-                  onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  className="bg-white shadow-sm text-base py-3.5 text-center tracking-[0.3em]"
-                  autoFocus
-                  error={error}
-                />
-                <Button fullWidth size="lg" onClick={handleVerifyOTP} loading={isLoading}>
-                  Verify & Sign In
-                </Button>
-                <button
-                  onClick={() => { setPhoneStep('input'); setOtpInput(''); setError(''); }}
-                  className="w-full text-center text-sm text-secondary/70 hover:text-secondary py-1 transition-colors"
-                >
-                  ← Change number
-                </button>
-              </>
-            )}
+            <Input
+              type="tel"
+              placeholder="+964 7XX XXX XXXX"
+              value={phoneInput}
+              onChange={(e) => setPhoneInput(e.target.value)}
+              className="bg-white shadow-sm text-base py-3.5"
+              autoFocus
+              error={error}
+            />
+            <Button fullWidth size="lg" onClick={handleSendOTP} loading={isLoading}>
+              Send Verification Code
+            </Button>
           </div>
         )}
 

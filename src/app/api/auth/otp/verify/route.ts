@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from 'firebase-admin/auth';
 import { getApps, initializeApp, cert } from 'firebase-admin/app';
-import otpStore from '@/lib/otp-store';
 
-const MAX_ATTEMPTS = 5;
-
-function normalizePhone(phone: string): string {
-  return phone.replace(/[\s\-\+]/g, '');
-}
+const HOOKS_HOST = process.env.WADEM_HOOKS_HOST || '';
+const API_KEY = process.env.WADEM_API_KEY || '';
 
 function getAdminAuth() {
   if (getApps().length === 0) {
@@ -25,81 +21,71 @@ function getAdminAuth() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { phone, code } = await request.json();
+    const { verificationId, code, phone } = await request.json();
 
-    if (!phone || !code) {
-      return NextResponse.json({ error: 'Phone and code required' }, { status: 400 });
+    if (!verificationId || !code) {
+      return NextResponse.json({ error: 'verification_id and code are required' }, { status: 400 });
     }
 
-    const normalizedPhone = normalizePhone(phone);
-    const stored = otpStore.get(normalizedPhone);
-
-    if (!stored) {
-      return NextResponse.json({ error: 'No verification code found. Please request a new one.' }, { status: 400 });
+    if (!HOOKS_HOST || !API_KEY) {
+      return NextResponse.json({ error: 'OTP service not configured' }, { status: 503 });
     }
 
-    if (stored.expiresAt < Date.now()) {
-      otpStore.delete(normalizedPhone);
-      return NextResponse.json({ error: 'Code expired. Please request a new one.' }, { status: 400 });
+    // Verify via Lezzoo's OTP API
+    const res = await fetch(`${HOOKS_HOST}/api/otp/verify`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+      },
+      body: JSON.stringify({
+        verification_id: verificationId,
+        code,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data.status !== 'success' || !data.verified) {
+      return NextResponse.json({ error: data.message || 'Invalid or expired code' }, { status: 400 });
     }
 
-    if (stored.attempts >= MAX_ATTEMPTS) {
-      otpStore.delete(normalizedPhone);
-      return NextResponse.json({ error: 'Too many attempts. Please request a new code.' }, { status: 429 });
-    }
-
-    stored.attempts += 1;
-
-    if (stored.code !== code) {
-      return NextResponse.json({ error: 'Incorrect code. Please try again.' }, { status: 400 });
-    }
-
-    // OTP verified — clean up
-    otpStore.delete(normalizedPhone);
-
-    // Create a Firebase custom token for this phone user
+    // OTP verified — create/get Firebase user + custom token for session
     const auth = getAdminAuth();
-    let sessionCookie = '';
 
-    if (auth) {
-      const phoneWithPlus = '+' + normalizedPhone;
-      // Get or create user by phone number
+    if (auth && phone) {
+      const normalizedPhone = phone.startsWith('+') ? phone : `+${phone}`;
       let firebaseUser;
       try {
-        firebaseUser = await auth.getUserByPhoneNumber(phoneWithPlus);
+        firebaseUser = await auth.getUserByPhoneNumber(normalizedPhone);
       } catch {
-        // User doesn't exist — create one
         firebaseUser = await auth.createUser({
-          phoneNumber: phoneWithPlus,
+          phoneNumber: normalizedPhone,
           displayName: '',
         });
       }
 
-      // Create a custom token
       const customToken = await auth.createCustomToken(firebaseUser.uid);
 
-      // We can't create a session cookie from a custom token directly.
-      // Instead, return the custom token + uid to the client.
-      // The client will sign in with the custom token to get an ID token,
-      // then exchange that for a session cookie.
       return NextResponse.json({
         success: true,
         verified: true,
         uid: firebaseUser.uid,
         customToken,
         displayName: firebaseUser.displayName || '',
-        phoneNumber: phoneWithPlus,
+        phoneNumber: normalizedPhone,
       });
     }
 
-    // Fallback if Firebase Admin is not configured — return a pseudo-auth
+    // Fallback if Firebase Admin not configured
+    const normalizedPhone = (phone || '').replace(/[\s\-]/g, '');
     return NextResponse.json({
       success: true,
       verified: true,
       uid: `phone_${normalizedPhone}`,
       customToken: null,
       displayName: '',
-      phoneNumber: '+' + normalizedPhone,
+      phoneNumber: phone || '',
     });
   } catch {
     return NextResponse.json({ error: 'Verification failed' }, { status: 500 });

@@ -2,7 +2,7 @@
   "name": "Wadem",
   "short_name": "Wadem",
   "description": "The fastest food delivery for office workers",
-  "start_url": "/",
+  "start_url": "https://wadem.krd/",
   "display": "standalone",
   "background_color": "#FFFFFF",
   "theme_color": "#FFC107",

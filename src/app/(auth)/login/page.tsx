@@ -34,12 +34,14 @@ export default function LoginPage() {
     let sessionSet = false;
     try {
       const token = await firebaseUser.getIdToken();
-      const res = await fetch('/api/auth/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token }),
-      });
-      sessionSet = res.ok;
+      if (token) {
+        const res = await fetch('/api/auth/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token }),
+        });
+        sessionSet = res.ok;
+      }
     } catch { /* session creation failed — user can still use the app client-side */ }
 
     if (!sessionSet) {

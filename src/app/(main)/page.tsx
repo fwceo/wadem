@@ -136,10 +136,10 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Promo Banners — Speed, Delivery, AI-Concierge */}
-        <div className="px-4 md:px-6 pt-5">
+        {/* Promo Banners — temporarily hidden */}
+        {/* <div className="px-4 md:px-6 pt-5">
           <PromoBanners />
-        </div>
+        </div> */}
 
         {/* Section Header */}
         <div className="px-4 md:px-6 pt-6 pb-2 flex items-center justify-between">

@@ -65,20 +65,46 @@ export const useCartStore = create<CartState>()(
       freeDeliveryApplied: false,
 
       addItem: (item, qty, customizations = [], restaurantId, restaurantName) => {
-        const totalPrice = calculateItemPrice(item, qty, customizations);
-        const cartItem: CartItem = {
-          id: uuidv4(),
-          menuItem: item,
-          quantity: qty,
-          customizations,
-          totalPrice,
-        };
+        set((state) => {
+          // Check if an identical item (same menuItem.id + same customizations) already exists
+          const custKey = JSON.stringify((customizations || []).map(c => ({ id: c.customizationId, opts: c.selectedOptions.map(o => o.id).sort() })));
+          const existingIdx = state.items.findIndex((ci) => {
+            const ciCustKey = JSON.stringify((ci.customizations || []).map(c => ({ id: c.customizationId, opts: c.selectedOptions.map(o => o.id).sort() })));
+            return ci.menuItem.id === item.id && ciCustKey === custKey;
+          });
 
-        set((state) => ({
-          items: [...state.items, cartItem],
-          restaurantId: restaurantId ?? state.restaurantId,
-          restaurantName: restaurantName ?? state.restaurantName,
-        }));
+          if (existingIdx >= 0) {
+            // Group: increment quantity on existing item
+            const updated = [...state.items];
+            const existing = updated[existingIdx];
+            const newQty = existing.quantity + qty;
+            updated[existingIdx] = {
+              ...existing,
+              quantity: newQty,
+              totalPrice: calculateItemPrice(existing.menuItem, newQty, existing.customizations),
+            };
+            return {
+              items: updated,
+              restaurantId: restaurantId ?? state.restaurantId,
+              restaurantName: restaurantName ?? state.restaurantName,
+            };
+          }
+
+          // New item
+          const totalPrice = calculateItemPrice(item, qty, customizations);
+          const cartItem: CartItem = {
+            id: uuidv4(),
+            menuItem: item,
+            quantity: qty,
+            customizations,
+            totalPrice,
+          };
+          return {
+            items: [...state.items, cartItem],
+            restaurantId: restaurantId ?? state.restaurantId,
+            restaurantName: restaurantName ?? state.restaurantName,
+          };
+        });
       },
 
       removeItem: (cartItemId) =>

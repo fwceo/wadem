@@ -18,7 +18,7 @@ import { formatDeliveryTime, formatPrice } from '@/lib/utils';
 export default function RestaurantPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
-  const { addItem, restaurantId, clearCart, items } = useCartStore();
+  const { addItem, removeItem, updateQuantity, restaurantId, clearCart, items } = useCartStore();
   const { addToast } = useUIStore();
 
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
@@ -418,50 +418,84 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
                   </h3>
                 </div>
                 <div className="divide-y divide-border-light">
-                  {category.items.map((item) => (
-                    <div
-                      key={`${category.id}-${item.id}`}
-                      className="flex items-center gap-4 px-4 md:px-6 py-5 cursor-pointer active:bg-gray-50 hover:bg-gray-50/50 transition-colors"
-                      onClick={() => {
-                        setSelectedItem(item);
-                        setQuantity(1);
-                        setSelectedCustomizations({});
-                      }}
-                    >
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <p className="text-base font-semibold text-secondary">{item.name}</p>
-                          {item.isPopular && (
-                            <span className="text-[10px] font-bold text-accent bg-accent/10 px-1.5 py-0.5 rounded">Popular</span>
+                  {category.items.map((item) => {
+                    const cartItem = items.find((ci) => ci.menuItem.id === item.id);
+                    const cartQty = cartItem?.quantity || 0;
+
+                    return (
+                      <div
+                        key={`${category.id}-${item.id}`}
+                        className="flex items-center gap-4 px-4 md:px-6 py-5 cursor-pointer active:bg-gray-50 hover:bg-gray-50/50 transition-colors"
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setQuantity(1);
+                          setSelectedCustomizations({});
+                        }}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-base font-semibold text-secondary">{item.name}</p>
+                            {item.isPopular && (
+                              <span className="text-[10px] font-bold text-accent bg-accent/10 px-1.5 py-0.5 rounded">Popular</span>
+                            )}
+                          </div>
+                          {item.description && (
+                            <p className="text-sm text-text-secondary line-clamp-2 mt-1">{item.description}</p>
+                          )}
+                          <p className="text-[15px] font-bold text-secondary mt-1.5">{formatPrice(item.price)}</p>
+                        </div>
+                        <div className="relative flex-shrink-0">
+                          {item.image && (
+                            <div className="w-24 h-24 rounded-xl overflow-hidden relative">
+                              <Image src={item.image} alt={item.name} fill className="object-cover" sizes="96px" />
+                            </div>
+                          )}
+                          {item.isAvailable ? (
+                            cartQty > 0 ? (
+                              <div
+                                className="absolute -bottom-2 -right-2 flex items-center bg-secondary rounded-full shadow-md overflow-hidden"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <motion.button
+                                  whileTap={{ scale: 0.85 }}
+                                  onClick={() => {
+                                    if (cartQty <= 1 && cartItem) {
+                                      removeItem(cartItem.id);
+                                    } else if (cartItem) {
+                                      updateQuantity(cartItem.id, cartQty - 1);
+                                    }
+                                  }}
+                                  className="w-7 h-7 flex items-center justify-center text-white"
+                                >
+                                  <span className="text-sm font-bold">−</span>
+                                </motion.button>
+                                <span className="text-white text-xs font-bold min-w-[20px] text-center">{cartQty}</span>
+                                <motion.button
+                                  whileTap={{ scale: 0.85 }}
+                                  onClick={() => handleQuickAdd(item)}
+                                  className="w-7 h-7 flex items-center justify-center text-white"
+                                >
+                                  <span className="text-sm font-bold">+</span>
+                                </motion.button>
+                              </div>
+                            ) : (
+                              <motion.button
+                                whileTap={{ scale: 0.85 }}
+                                onClick={(e) => { e.stopPropagation(); handleQuickAdd(item); }}
+                                className="absolute -bottom-2 -right-2 w-8 h-8 bg-secondary rounded-full flex items-center justify-center shadow-md"
+                              >
+                                <span className="text-white text-sm font-bold">+</span>
+                              </motion.button>
+                            )
+                          ) : (
+                            <div className="absolute inset-0 bg-white/70 rounded-xl flex items-center justify-center">
+                              <span className="text-xs font-semibold text-error">Sold Out</span>
+                            </div>
                           )}
                         </div>
-                        {item.description && (
-                          <p className="text-sm text-text-secondary line-clamp-2 mt-1">{item.description}</p>
-                        )}
-                        <p className="text-[15px] font-bold text-secondary mt-1.5">{formatPrice(item.price)}</p>
                       </div>
-                      <div className="relative flex-shrink-0">
-                        {item.image && (
-                          <div className="w-24 h-24 rounded-xl overflow-hidden relative">
-                            <Image src={item.image} alt={item.name} fill className="object-cover" sizes="96px" />
-                          </div>
-                        )}
-                        {item.isAvailable ? (
-                          <motion.button
-                            whileTap={{ scale: 0.85 }}
-                            onClick={(e) => { e.stopPropagation(); handleQuickAdd(item); }}
-                            className="absolute -bottom-2 -right-2 w-8 h-8 bg-secondary rounded-full flex items-center justify-center shadow-md"
-                          >
-                            <span className="text-white text-sm font-bold">+</span>
-                          </motion.button>
-                        ) : (
-                          <div className="absolute inset-0 bg-white/70 rounded-xl flex items-center justify-center">
-                            <span className="text-xs font-semibold text-error">Sold Out</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ))

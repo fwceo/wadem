@@ -108,7 +108,7 @@ export default function FreeDeliveryBanner() {
                 </p>
 
                 {/* 4 delivery cards showing used/remaining */}
-                <div className="grid grid-cols-4 gap-2 mb-6">
+                <div className="grid grid-cols-4 gap-3 mb-6">
                   {[0, 1, 2, 3].map((i) => {
                     const isUsed = i < used;
                     const labels = ['1st', '2nd', '3rd', '4th'];
@@ -121,16 +121,13 @@ export default function FreeDeliveryBanner() {
                             : 'bg-primary/10 border-primary'
                         }`}
                       >
-                        <div className={`text-2xl mb-1 ${isUsed ? 'grayscale' : ''}`}>
+                        <div className={`text-2xl mb-1.5 ${isUsed ? 'grayscale' : ''}`}>
                           {isUsed ? '✓' : '🛵'}
                         </div>
-                        <p className={`text-[10px] font-bold ${isUsed ? 'text-text-tertiary line-through' : 'text-secondary'}`}>
-                          Free
+                        <p className={`text-[11px] font-bold leading-tight ${isUsed ? 'text-text-tertiary line-through' : 'text-secondary'}`}>
+                          Free delivery
                         </p>
-                        <p className={`text-[10px] font-bold ${isUsed ? 'text-text-tertiary line-through' : 'text-secondary'}`}>
-                          delivery
-                        </p>
-                        <p className={`text-[9px] mt-1 font-medium ${isUsed ? 'text-accent' : 'text-text-secondary'}`}>
+                        <p className={`text-[10px] mt-1.5 font-medium ${isUsed ? 'text-accent' : 'text-text-secondary'}`}>
                           {isUsed ? 'Used' : `${labels[i]} order`}
                         </p>
                       </div>

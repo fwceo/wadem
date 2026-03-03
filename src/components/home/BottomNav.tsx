@@ -70,7 +70,7 @@ export default function BottomNav() {
   const activeTab = getActiveTab();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-border h-16 flex items-center justify-around px-2 pb-safe">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-border shadow-[0_-2px_10px_rgba(0,0,0,0.05)] h-16 flex items-center justify-around px-2 pb-[env(safe-area-inset-bottom)]">
       {tabs.map((tab) => {
         const isCart = tab.id === 'cart';
         const isActive = !isCart && activeTab === tab.id;

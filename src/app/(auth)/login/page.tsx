@@ -13,9 +13,12 @@ type PhoneStep = 'input' | 'otp';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setUser, setPhone, setConfirmationResult, setLoading, isLoading } = useUserStore();
+  const { setUser, setPhone, setConfirmationResult } = useUserStore();
   const [authMode, setAuthMode] = useState<AuthMode>('phone');
   const [error, setError] = useState('');
+  const [phoneLoading, setPhoneLoading] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   // Phone auth state
   const [phoneInput, setPhoneInput] = useState('+964');
@@ -114,7 +117,7 @@ export default function LoginPage() {
       return;
     }
     setError('');
-    setLoading(true);
+    setPhoneLoading(true);
     try {
       const res = await fetch('/api/auth/otp/send', {
         method: 'POST',
@@ -135,7 +138,7 @@ export default function LoginPage() {
     } catch {
       setError('Failed to send verification code');
     } finally {
-      setLoading(false);
+      setPhoneLoading(false);
     }
   };
 
@@ -202,7 +205,7 @@ export default function LoginPage() {
     if (isSignUp && !nameInput) { setError('Please enter your name'); return; }
     if (passwordInput.length < 6) { setError('Password must be at least 6 characters'); return; }
     setError('');
-    setLoading(true);
+    setEmailLoading(true);
     try {
       const fb = await import('@/lib/firebase');
       const result = isSignUp
@@ -215,13 +218,13 @@ export default function LoginPage() {
       else if (msg.includes('user-not-found') || msg.includes('invalid-credential')) setError('Invalid email or password');
       else setError(msg);
     } finally {
-      setLoading(false);
+      setEmailLoading(false);
     }
   };
 
   // --- Google Auth ---
   const handleGoogleSignIn = async () => {
-    setLoading(true);
+    setGoogleLoading(true);
     setError('');
     try {
       const fb = await import('@/lib/firebase');
@@ -230,7 +233,7 @@ export default function LoginPage() {
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Google sign-in failed');
     } finally {
-      setLoading(false);
+      setGoogleLoading(false);
     }
   };
 
@@ -277,7 +280,7 @@ export default function LoginPage() {
               autoFocus
               error={error}
             />
-            <Button fullWidth size="lg" onClick={handleSendOTP} loading={isLoading}>
+            <Button fullWidth size="lg" onClick={handleSendOTP} loading={phoneLoading}>
               Send Verification Code
             </Button>
           </div>
@@ -291,7 +294,7 @@ export default function LoginPage() {
             )}
             <Input type="email" placeholder="Email address" value={emailInput} onChange={(e) => setEmailInput(e.target.value)} className="bg-white shadow-sm text-base py-3.5" autoFocus />
             <Input type="password" placeholder="Password" value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} error={error} className="bg-white shadow-sm text-base py-3.5" />
-            <Button type="submit" fullWidth size="lg" loading={isLoading}>
+            <Button type="submit" fullWidth size="lg" loading={emailLoading}>
               {isSignUp ? 'Create Account' : 'Sign In'}
             </Button>
             <button onClick={() => { setIsSignUp(!isSignUp); setError(''); }} className="w-full text-center text-sm text-secondary/80 hover:text-secondary py-1 transition-colors">
@@ -315,7 +318,7 @@ export default function LoginPage() {
         </div>
 
         {/* Google Sign In */}
-        <Button variant="secondary" fullWidth size="lg" onClick={handleGoogleSignIn} loading={isLoading} className="bg-white shadow-sm hover:shadow-md text-secondary font-semibold">
+        <Button variant="secondary" fullWidth size="lg" onClick={handleGoogleSignIn} loading={googleLoading} className="bg-white shadow-sm hover:shadow-md text-secondary font-semibold">
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />

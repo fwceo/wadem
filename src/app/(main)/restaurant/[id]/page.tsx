@@ -73,6 +73,9 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
       .catch(() => setMenuLoading(false));
   }, [id]);
 
+  // Scroll to top on mount
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
   // Sticky header observer
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -212,7 +215,7 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
   // --- Loading state ---
   if (loading) {
     return (
-      <div className="-mt-14 md:-mt-16">
+      <div>
         <Skeleton className="h-56 md:h-72 w-full" />
         <div className="max-w-4xl mx-auto px-4 py-4 space-y-3">
           <Skeleton className="h-7 w-3/4" />
@@ -268,7 +271,7 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
         )}
         <button
           onClick={() => router.back()}
-          className="absolute top-4 left-4 w-9 h-9 bg-white/90 rounded-full flex items-center justify-center shadow"
+          className="absolute top-16 left-4 w-9 h-9 bg-white/90 rounded-full flex items-center justify-center shadow z-10"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -278,7 +281,7 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
 
       <div className="max-w-4xl mx-auto">
         {/* Restaurant Info */}
-        <div className="px-4 md:px-6 py-4 bg-white -mt-4 relative rounded-t-2xl">
+        <div className="px-4 md:px-6 py-5 bg-white -mt-4 relative rounded-t-2xl">
           <h1 className="text-xl md:text-2xl font-bold text-secondary mb-1">{restaurant.name}</h1>
           <p className="text-[13px] text-text-secondary mb-2">{restaurant.cuisine.join(' · ')}</p>
           <div className="flex flex-wrap items-center gap-3 text-[13px]">
@@ -418,7 +421,7 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
                   {category.items.map((item) => (
                     <div
                       key={`${category.id}-${item.id}`}
-                      className="flex items-center gap-4 px-4 md:px-6 py-4 cursor-pointer active:bg-gray-50 hover:bg-gray-50/50 transition-colors"
+                      className="flex items-center gap-4 px-4 md:px-6 py-5 cursor-pointer active:bg-gray-50 hover:bg-gray-50/50 transition-colors"
                       onClick={() => {
                         setSelectedItem(item);
                         setQuantity(1);
@@ -474,7 +477,7 @@ export default function RestaurantPage({ params }: { params: Promise<{ id: strin
         </div>
 
         {/* Restaurant Info */}
-        <div className="bg-white mt-2 px-4 md:px-6 py-4 mb-4">
+        <div className="bg-white mt-2 px-4 md:px-6 py-4 mb-24">
           <h3 className="text-[15px] font-bold text-secondary mb-3">Restaurant Info</h3>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between"><span className="text-text-secondary">Delivery Time</span><span className="text-secondary">{formatDeliveryTime(restaurant.deliveryTime.min, restaurant.deliveryTime.max)}</span></div>

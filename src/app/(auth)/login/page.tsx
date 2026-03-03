@@ -152,20 +152,32 @@ export default function LoginPage() {
       if (data.success && data.verified) {
         // Sign in with custom token to get a session
         if (data.customToken) {
-          const fb = await import('@/lib/firebase');
-          const { signInWithCustomToken } = await import('firebase/auth');
-          const auth = (await import('firebase/auth')).getAuth();
-          const cred = await signInWithCustomToken(auth, data.customToken);
-          await handleUserResult({
-            uid: cred.user.uid,
-            displayName: cred.user.displayName,
-            email: cred.user.email,
-            phoneNumber: cred.user.phoneNumber,
-            getIdToken: () => cred.user.getIdToken(),
-          });
+          try {
+            // Import firebase to ensure app is initialized
+            await import('@/lib/firebase');
+            const { getAuth, signInWithCustomToken } = await import('firebase/auth');
+            const auth = getAuth();
+            const cred = await signInWithCustomToken(auth, data.customToken);
+            await handleUserResult({
+              uid: cred.user.uid,
+              displayName: cred.user.displayName,
+              email: cred.user.email,
+              phoneNumber: cred.user.phoneNumber,
+              getIdToken: () => cred.user.getIdToken(),
+            });
+          } catch {
+            // signInWithCustomToken failed — fall back to direct login
+            await handleUserResult({
+              uid: data.uid,
+              displayName: data.displayName || '',
+              email: null,
+              phoneNumber: data.phoneNumber || phoneInput,
+              getIdToken: async () => '',
+            });
+          }
         } else {
-          // Fallback — use the uid from the response directly
-          handleUserResult({
+          // No custom token — use uid from response directly
+          await handleUserResult({
             uid: data.uid,
             displayName: data.displayName || '',
             email: null,
